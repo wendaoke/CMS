@@ -14,15 +14,16 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.shishuo.cms.entity.Article;
 import com.shishuo.cms.entity.vo.ArticleVo;
 import com.shishuo.cms.entity.vo.PageVo;
 import com.shishuo.cms.exception.FolderNotFoundException;
+import com.shishuo.cms.plugin.TagPlugin;
 import com.shishuo.cms.service.ArticleService;
 import com.shishuo.cms.service.FolderService;
 
 import freemarker.core.Environment;
 import freemarker.template.TemplateDirectiveBody;
-import freemarker.template.TemplateDirectiveModel;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateModel;
 
@@ -31,7 +32,7 @@ import freemarker.template.TemplateModel;
  * 
  */
 @Service
-public class ArticlePageTag implements TemplateDirectiveModel {
+public class ArticlePageTag extends TagPlugin {
 
 	@Autowired
 	private ArticleService articleService;

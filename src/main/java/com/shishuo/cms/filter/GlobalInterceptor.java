@@ -16,8 +16,6 @@ import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.shishuo.cms.constant.ConfigConstant;
-import com.shishuo.cms.constant.SystemConstant;
-import com.shishuo.cms.entity.Admin;
 import com.shishuo.cms.service.ConfigService;
 import com.shishuo.cms.util.HttpUtils;
 
@@ -45,26 +43,21 @@ public class GlobalInterceptor implements HandlerInterceptor {
 		if (null == modelAndView) {
 			return;
 		}
-		Admin admin = (Admin) request.getSession().getAttribute(
-				SystemConstant.SESSION_ADMIN);
-		if (admin == null) {
-			modelAndView.addObject("isAdmin", false);
-		} else {
-			modelAndView.addObject("isAdmin", true);
-		}
 		// 系统配置参数
 		String basePath = HttpUtils.getBasePath(request);
-		String contextPath = HttpUtils.getContextPath(request);
-		modelAndView.addObject("basePath", basePath);
-		modelAndView.addObject("contextPath", contextPath);
-		modelAndView.addObject("SYS_SITEDESC",
-				configService.getConfigByKey(ConfigConstant.SYS_SITEDESC));
-		modelAndView.addObject("SYS_SITENAME",
-				configService.getConfigByKey(ConfigConstant.SYS_SITENAME));
-		modelAndView.addObject("SYS_TEMPLATE",
-				configService.getConfigByKey(ConfigConstant.SYS_THEME));
-		modelAndView.addObject("TEMPLATE_PATH", basePath + "/themes/"
-				+ configService.getConfigByKey(ConfigConstant.SYS_THEME));
+		modelAndView.addObject("BASE_PATH", basePath);
+		modelAndView.addObject("UPLOAD_BASE_PATH", basePath + "/upload");
+		modelAndView
+				.addObject(
+						"TEMPLATE_BASE_PATH",
+						basePath
+								+ "/static/template/"
+								+ configService
+										.getStringByKey(ConfigConstant.SHISHUO_TEMPLATE));
+		modelAndView.addObject("shishuo_seo_title",
+				configService.getStringByKey("shishuo_seo_title"));
+		modelAndView.addObject("shishuo_seo_headline",
+				configService.getStringByKey("shishuo_seo_headline"));
 		MDC.put("ip", HttpUtils.getIp(request));
 	}
 

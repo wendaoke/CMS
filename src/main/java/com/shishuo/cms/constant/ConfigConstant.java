@@ -20,8 +20,5 @@ public class ConfigConstant {
 	 * 默认的模板
 	 */
 	public static String DEFAUTL_TEMPLATE = "default";
-
-	public static String SYS_SITEDESC = "sys_sitedesc";
-	public static String SYS_SITENAME = "sys_sitename";
-	public static String SYS_THEME = "sys_theme";
+	public static String SHISHUO_TEMPLATE = "shishuo_template";
 }

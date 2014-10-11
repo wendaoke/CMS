@@ -19,7 +19,6 @@ import com.shishuo.cms.constant.AdminConstant;
 import com.shishuo.cms.constant.SystemConstant;
 import com.shishuo.cms.dao.AdminDao;
 import com.shishuo.cms.entity.Admin;
-import com.shishuo.cms.entity.vo.AdminVo;
 import com.shishuo.cms.entity.vo.PageVo;
 import com.shishuo.cms.exception.AuthException;
 import com.shishuo.cms.util.AuthUtils;
@@ -123,11 +122,10 @@ public class AdminService {
 	 */
 	public void adminLogin(String email, String password,
 			HttpServletRequest request) throws AuthException {
-		AdminVo admin = adminDao.getAdminByEmail(email);
+		Admin admin = adminDao.getAdminByEmail(email);
 		if (admin == null) {
 			throw new AuthException("邮箱或密码错误");
 		}
-		admin.setFaceUrl(AuthUtils.getFaceUrl(admin.getEmail()));
 		String loginPassword = AuthUtils.getPassword(password, email);
 		if (loginPassword.equals(admin.getPassword())) {
 			HttpSession session = request.getSession();

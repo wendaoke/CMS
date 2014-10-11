@@ -6,10 +6,10 @@
 	</organization>
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.shishuo</groupId>
-	<artifactId>cms</artifactId>
+	<artifactId>shishuocms</artifactId>
 	<packaging>war</packaging>
-	<version>0.0.1</version>
-	<name>SHISHUO CMS Maven Webapp</name>
+	<version>1.0.0</version>
+	<name>SHISHUO CMS (http://shishuo.com/cms)</name>
 	<url>http://cms.shishuo.com</url>
 	<dependencies>
 		<dependency>
@@ -21,47 +21,47 @@
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context</artifactId>
-			<version>3.2.4.RELEASE</version>
+			<version>3.2.11.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-context-support</artifactId>
-			<version>3.2.4.RELEASE</version>
+			<version>3.2.11.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-jdbc</artifactId>
-			<version>3.2.4.RELEASE</version>
+			<version>3.2.11.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-webmvc</artifactId>
-			<version>3.2.4.RELEASE</version>
+			<version>3.2.11.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-aop</artifactId>
-			<version>3.2.4.RELEASE</version>
+			<version>3.2.11.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-test</artifactId>
-			<version>3.2.4.RELEASE</version>
+			<version>3.2.11.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-web</artifactId>
-			<version>3.2.4.RELEASE</version>
+			<version>3.2.11.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
-			<version>3.2.4.RELEASE</version>
+			<version>3.2.11.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-expression</artifactId>
-			<version>3.2.4.RELEASE</version>
+			<version>3.2.11.RELEASE</version>
 		</dependency>
 		<dependency>
 			<groupId>org.mybatis</groupId>
@@ -85,11 +85,6 @@
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
 			<version>1.2.14</version>
-		</dependency>
-		<dependency>
-			<groupId>c3p0</groupId>
-			<artifactId>c3p0</artifactId>
-			<version>0.9.1</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.commons</groupId>
@@ -151,20 +146,24 @@
 			<artifactId>kaptcha</artifactId>
 			<version>0.0.8</version>
 		</dependency>
-
-		<dependency>
-			<groupId>com.fasterxml.jackson.dataformat</groupId>
-			<artifactId>jackson-dataformat-xml</artifactId>
-			<version>2.2.3</version>
-		</dependency>
 		<dependency>
 			<groupId>net.sf.json-lib</groupId>
 			<artifactId>json-lib</artifactId>
 			<version>2.4</version>
 			<classifier>jdk15</classifier>
 		</dependency>
-
+		<dependency>
+			<groupId>commons-dbcp</groupId>
+			<artifactId>commons-dbcp</artifactId>
+			<version>1.4</version>
+		</dependency>
+		<dependency>
+			<groupId>net.coobird</groupId>
+			<artifactId>thumbnailator</artifactId>
+			<version>0.4.7</version>
+		</dependency>
 	</dependencies>
+
 
 	<build>
 		<defaultGoal>compile</defaultGoal>
@@ -303,8 +302,6 @@
 									<fileset
 										dir="${basedir}/target/${project.artifactId}-${project.version}" />
 								</copy>
-								<replace file="${basedir}/dist/WEB-INF/web.xml" token="shishuo.cms.root"
-									value="shishuo.cms.root.${shishuo.time}" />
 							</target>
 						</configuration>
 						<goals>
@@ -326,6 +323,7 @@
 				<includes>
 					<include>applicationContext.xml</include>
 					<include>log4j.properties</include>
+					<include>ueditor.config.json</include>
 				</includes>
 			</resource>
 		</resources>

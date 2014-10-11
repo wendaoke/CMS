@@ -8,8 +8,10 @@ package com.shishuo.cms.service;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -20,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.shishuo.cms.constant.FolderConstant;
 import com.shishuo.cms.dao.FolderDao;
 import com.shishuo.cms.entity.Folder;
+import com.shishuo.cms.entity.vo.AdminFolderVo;
 import com.shishuo.cms.entity.vo.FolderVo;
 import com.shishuo.cms.exception.FolderNotFoundException;
 
@@ -36,6 +39,9 @@ public class FolderService {
 
 	@Autowired
 	private FolderDao folderDao;
+
+	@Autowired
+	private AdminFolderService adminFolderService;
 
 	// ///////////////////////////////
 	// ///// 增加 ////////
@@ -54,10 +60,8 @@ public class FolderService {
 	 */
 	@CacheEvict(value = "folder", allEntries = true)
 	@Transactional
-	public Folder addFolder(long fatherId, String name,
-			FolderConstant.Status status, String ename,
-			FolderConstant.Rank rank, FolderConstant.Type type)
-			throws FolderNotFoundException {
+	public Folder addFolder(long fatherId, String name, String ename,
+			FolderConstant.status status) throws FolderNotFoundException {
 		Folder folder = new Folder();
 		folder.setFatherId(fatherId);
 		if (fatherId == 0) {
@@ -66,17 +70,15 @@ public class FolderService {
 			Folder fatherFolder = this.getFolderById(fatherId);
 			folder.setLevel(fatherFolder.getLevel() + 1);
 		}
-		folder.setEname(ename.trim());
 		folder.setName(name);
+		folder.setEname(ename);
+		folder.setContent("");
 		folder.setPath("");
 		folder.setCount(0);
-		folder.setStatus(status);
 		folder.setSort(1);
-		folder.setRank(rank);
-		folder.setType(type);
-		folder.setContent("");
+		folder.setStatus(status);
+
 		folder.setCreateTime(new Date());
-		folder.setOwner(FolderConstant.Owner.app);
 		folderDao.addFolder(folder);
 		if (fatherId == 0) {
 			this.updatePath(folder.getFolderId(), folder.getFolderId() + "");
@@ -120,8 +122,9 @@ public class FolderService {
 	 * @return folder
 	 */
 	@CacheEvict(value = "folder", allEntries = true)
-	public void updateFolderById(long folderId, String ename, String name,String content) {
-		folderDao.updateFolder(folderId, name, ename, content);
+	public void updateFolderById(long folderId, String name, String ename,
+			FolderConstant.status status, String content) {
+		folderDao.updateFolderById(folderId, name, ename, status, content);
 	}
 
 	/**
@@ -167,7 +170,7 @@ public class FolderService {
 	 * @return Folder
 	 * @throws FolderNotFoundException
 	 */
-	@Cacheable(value = "folder", key = "'getFolderById_'+#folderId")
+	@Cacheable(value = "folder")
 	public FolderVo getFolderById(long folderId) throws FolderNotFoundException {
 		FolderVo folder = folderDao.getFolderById(folderId);
 		if (folder == null) {
@@ -178,13 +181,60 @@ public class FolderService {
 	}
 
 	/**
+	 * 得到所有的四层目录
+	 * 
+	 * @return
+	 * @throws FolderNotFoundException
+	 */
+	@Cacheable(value = "folder")
+	public List<FolderVo> getAllFolderList(long adminId) {
+		List<FolderVo> firstFolderList = folderDao.getAllFolderList();
+		HashMap<String, FolderVo> folderMap = new HashMap<String, FolderVo>();
+		if (adminId == 0) {
+			for (FolderVo folder : firstFolderList) {
+				folderMap.put(folder.getFolderId() + "", folder);
+			}
+		} else {
+			for (FolderVo folder : firstFolderList) {
+				folderMap.put(folder.getFolderId() + "", folder);
+				AdminFolderVo adminFolder = adminFolderService
+						.getAdminFolderById(adminId, folder.getFolderId());
+				if (adminFolder == null) {
+					folder.setOwner("no");
+				} else {
+					folder.setOwner("yes");
+				}
+			}
+		}
+		for (FolderVo folder : firstFolderList) {
+			folder.setPathName(getPathName(folderMap, folder.getPath()));
+		}
+		return firstFolderList;
+	}
+
+	@Cacheable(value = "folder")
+	private String getPathName(HashMap<String, FolderVo> folderMap, String path) {
+		List<String> names = new ArrayList<String>();
+		try {
+			String[] folderIds = path.split("#");
+			for (String folderId : folderIds) {
+				names.add(folderMap.get(folderId).getName());
+			}
+		} catch (NullPointerException e) {
+			logger.fatal(path + " - " + StringUtils.join(path.split("#"), ","));
+		}
+		return StringUtils.join(names, " - ");
+	}
+
+	/**
 	 * 得到所有子目录
 	 * 
 	 * @param fatherId
 	 * @return List<Folder>
 	 */
+	@Cacheable(value = "folder")
 	public List<FolderVo> getFolderListByFatherId(long fatherId,
-			FolderConstant.Status status) {
+			FolderConstant.status status) {
 		return folderDao.getFolderListByFatherId(fatherId, status);
 	}
 
@@ -196,48 +246,24 @@ public class FolderService {
 	 * @return
 	 * @throws FolderNotFoundException
 	 */
-	@Cacheable(value = "folder", key = "'getFolderByEnameAndFatherId_'+#ename+'_'+#fatherId")
-	public FolderVo getFolderByEnameAndFatherId(String ename, long fatherId)
-			throws FolderNotFoundException {
-		FolderVo folder = folderDao
-				.getFolderByEnameAndFatherId(ename, fatherId);
+	@Cacheable(value = "folder")
+	public Folder getFolderByEname(String ename) throws FolderNotFoundException {
+		Folder folder = folderDao.getFolderByEname(ename);
 		if (folder == null) {
 			throw new FolderNotFoundException(ename + " 目录，不存在");
 		} else {
-			List<FolderVo> folderList = getFolderListByFatherId(
-					folder.getFolderId(), FolderConstant.Status.display);
-			folder.setFolderList(folderList);
 			return folder;
 		}
 	}
 
-	/**
-	 * 得到所有的四层目录
-	 * 
-	 * @return
-	 */
-	@Cacheable(value = "folder", key = "'getAllFolderList_'+#fatherId+'_'+#status")
-	public List<FolderVo> getAllFolderList(long fatherId,
-			FolderConstant.Status status) {
-		List<FolderVo> firstFolderList = this.getFolderListByFatherId(fatherId,
-				status);
-		for (FolderVo firstFolder : firstFolderList) {
-			List<FolderVo> secondFolderList = this.getFolderListByFatherId(
-					firstFolder.getFolderId(), status);
-			for (FolderVo secondFolder : secondFolderList) {
-				List<FolderVo> thirdFolderList = this.getFolderListByFatherId(
-						secondFolder.getFolderId(), status);
-				for (FolderVo thirdFolder : thirdFolderList) {
-					List<FolderVo> fourthFolderList = this
-							.getFolderListByFatherId(thirdFolder.getFolderId(),
-									status);
-					thirdFolder.setFolderList(fourthFolderList);
-				}
-				secondFolder.setFolderList(thirdFolderList);
-			}
-			firstFolder.setFolderList(secondFolderList);
+	@Cacheable(value = "folder")
+	public boolean isFolderByEname(String ename) {
+		Folder folder = folderDao.getFolderByEname(ename);
+		if (folder == null) {
+			return false;
+		} else {
+			return true;
 		}
-		return firstFolderList;
 	}
 
 	/**
@@ -247,17 +273,17 @@ public class FolderService {
 	 * @return
 	 * @throws FolderNotFoundException
 	 */
-	@Cacheable(value = "folder", key = "'getFolderPathListByFolderId_'+#folderId")
-	public List<Folder> getFolderPathListByFolderId(long folderId)
+	@Cacheable(value = "folder")
+	public List<FolderVo> getFolderPathListByFolderId(long folderId)
 			throws FolderNotFoundException {
-		List<Folder> list = new ArrayList<Folder>();
+		List<FolderVo> list = new ArrayList<FolderVo>();
 		if (folderId == 0) {
 			return list;
 		} else {
 			Folder folder = this.getFolderById(folderId);
 			String[] str = folder.getPath().split("#");
 			for (int i = 0; i < folder.getLevel(); i++) {
-				Folder fold = this.getFolderById(Long.parseLong(str[i]));
+				FolderVo fold = this.getFolderById(Long.parseLong(str[i]));
 				list.add(fold);
 			}
 			return list;
@@ -265,13 +291,25 @@ public class FolderService {
 	}
 
 	@CacheEvict(value = "folder", allEntries = true)
-	public void updateType(long folderId, FolderConstant.Type type) {
-		folderDao.updateType(folderId, type);
+	public void updateStatus(long folderId, FolderConstant.status status) {
+		folderDao.updateStatus(folderId, status);
 	}
 
-	@CacheEvict(value = "folder", allEntries = true)
-	public void updateStatus(long folderId, FolderConstant.Status status) {
-		folderDao.updateStatus(folderId, status);
+	/**
+	 * 判断是不是已经存在的目录英文名
+	 * 
+	 * @param ename
+	 * @return
+	 */
+	@Cacheable(value = "folder")
+	public boolean isFolderEname(String ename) {
+		try {
+			this.getFolderByEname(ename);
+			return false;
+		} catch (FolderNotFoundException e) {
+			return true;
+		}
+
 	}
 
 }

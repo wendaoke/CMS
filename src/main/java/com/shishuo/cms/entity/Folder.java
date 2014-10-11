@@ -55,6 +55,14 @@ public class Folder {
 	 * 排序
 	 */
 	private int sort;
+	/**
+	 * 宽
+	 */
+	private int width;
+	/**
+	 * 高
+	 */
+	private int height;
 
 	/**
 	 * 文件数
@@ -62,40 +70,9 @@ public class Folder {
 	private int count;
 
 	/**
-	 * 类型
-	 */
-	private FolderConstant.Type type;
-
-	public FolderConstant.Type getType() {
-		return type;
-	}
-
-	public void setType(FolderConstant.Type type) {
-		this.type = type;
-	}
-
-	/**
-	 * 
-	 */
-	private FolderConstant.Owner owner;
-
-	public FolderConstant.Owner getOwner() {
-		return owner;
-	}
-
-	public void setOwner(FolderConstant.Owner owner) {
-		this.owner = owner;
-	}
-
-	/**
-	 * 等级
-	 */
-	private FolderConstant.Rank rank;
-
-	/**
 	 * 状态
 	 */
-	private FolderConstant.Status status;
+	private FolderConstant.status status;
 
 	/**
 	 * 创建时间
@@ -106,22 +83,6 @@ public class Folder {
 	 * 更新时间
 	 */
 	private Date updateTime;
-
-	public Date getUpdateTime() {
-		return updateTime;
-	}
-
-	public void setUpdateTime(Date updateTime) {
-		this.updateTime = updateTime;
-	}
-
-	public String getPath() {
-		return path;
-	}
-
-	public void setPath(String path) {
-		this.path = path;
-	}
 
 	public long getFolderId() {
 		return folderId;
@@ -139,10 +100,6 @@ public class Folder {
 		this.fatherId = fatherId;
 	}
 
-	public String getName() {
-		return name;
-	}
-
 	public String getEname() {
 		return ename;
 	}
@@ -151,16 +108,36 @@ public class Folder {
 		this.ename = ename;
 	}
 
+	public String getName() {
+		return name;
+	}
+
 	public void setName(String name) {
 		this.name = name;
 	}
 
-	public int getCount() {
-		return count;
+	public String getContent() {
+		return content;
 	}
 
-	public void setCount(int count) {
-		this.count = count;
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+	public String getPath() {
+		return path;
+	}
+
+	public void setPath(String path) {
+		this.path = path;
+	}
+
+	public int getLevel() {
+		return level;
+	}
+
+	public void setLevel(int level) {
+		this.level = level;
 	}
 
 	public int getSort() {
@@ -171,15 +148,19 @@ public class Folder {
 		this.sort = sort;
 	}
 
-	public FolderConstant.Rank getRank() {
-		return rank;
+	public int getCount() {
+		return count;
 	}
 
-	public void setRank(FolderConstant.Rank rank) {
-		this.rank = rank;
+	public void setCount(int count) {
+		this.count = count;
 	}
 
-	public void setStatus(FolderConstant.Status status) {
+	public FolderConstant.status getStatus() {
+		return status;
+	}
+
+	public void setStatus(FolderConstant.status status) {
 		this.status = status;
 	}
 
@@ -191,24 +172,28 @@ public class Folder {
 		this.createTime = createTime;
 	}
 
-	public int getLevel() {
-		return level;
+	public Date getUpdateTime() {
+		return updateTime;
 	}
 
-	public void setLevel(int level) {
-		this.level = level;
+	public void setUpdateTime(Date updateTime) {
+		this.updateTime = updateTime;
 	}
 
-	public FolderConstant.Status getStatus() {
-		return status;
+	public int getWidth() {
+		return width;
 	}
 
-	public String getContent() {
-		return content;
+	public void setWidth(int width) {
+		this.width = width;
 	}
 
-	public void setContent(String content) {
-		this.content = content;
+	public int getHeight() {
+		return height;
+	}
+
+	public void setHeight(int height) {
+		this.height = height;
 	}
 
 }

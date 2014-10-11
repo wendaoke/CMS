@@ -12,8 +12,8 @@
 	<!-- ############################## -->
 	<insert id="addArticle" parameterType="com.shishuo.cms.entity.Article">
 		insert into
-		article(firstFolderId,secondFolderId,thirdFolderId,fourthFolderId,content,description,createTime,updateTime,expireTime)
-		values(#{firstFolderId},#{secondFolderId},#{thirdFolderId},#{fourthFolderId},'','',#{createTime},#{updateTime},#{expireTime})
+		article(firstFolderId,secondFolderId,thirdFolderId,fourthFolderId,adminId,title,summary,content,picture,status,createTime,updateTime)
+		values(#{firstFolderId},#{secondFolderId},#{thirdFolderId},#{fourthFolderId},#{adminId},#{title},#{summary},#{content},#{picture},#{status},#{createTime},#{updateTime})
 		<selectKey resultType="long" keyProperty="articleId">
 			SELECT
 			LAST_INSERT_ID()
@@ -24,7 +24,7 @@
 	<!-- ###### 删除 ###### -->
 	<!-- ############################## -->
 
-	<delete id="deleteArticle" parameterType="com.shishuo.cms.entity.Article">
+	<delete id="deleteArticleById" parameterType="com.shishuo.cms.entity.Article">
 		delete from article
 		where articleId=#{articleId}
 	</delete>
@@ -44,19 +44,14 @@
 		secondFolderId=#{secondFolderId},
 		thirdFolderId=#{thirdFolderId},
 		fourthFolderId=#{fourthFolderId},
-		name=#{name},
 		title=#{title},
-		description=#{description},
+		summary=#{summary},
+		picture=#{picture},
 		content=#{content},
 		status=#{status},
+		createTime=#{createTime},
 		updateTime=#{updateTime}
 		WHERE
-		articleId=#{articleId}
-	</update>
-
-	<update id="updateStatusByArticleId">
-		update article set
-		status=#{status} where
 		articleId=#{articleId}
 	</update>
 
@@ -79,7 +74,7 @@
 		select * from article where articleId=#{articleId}
 	</select>
 
-	<select id="getArticleListByFoderIdPath" resultType="com.shishuo.cms.entity.vo.ArticleVo">
+	<select id="getArticleListByFoderIdAndStatus" resultType="com.shishuo.cms.entity.vo.ArticleVo">
 		select *
 		from article
 		where
@@ -92,7 +87,7 @@
 		createTime desc limit #{offset},#{rows}
 	</select>
 
-	<select id="getArticleCountByFoderIdPath" resultType="Integer">
+	<select id="getArticleCountByFoderIdAndStatus" resultType="Integer">
 		select
 		count(*)
 		from article
@@ -104,22 +99,20 @@
 		and status = #{status}
 	</select>
 
-	<select id="getArticleCountByFoderId" resultType="Integer">
+	<select id="getArticleCountByFolderId" resultType="Integer">
 		select
 		count(*)
 		from article
-		where
-		<if test="firstFolderId!=0">firstFolderId=#{firstFolderId}</if>
+		<if test="firstFolderId!=0">where firstFolderId=#{firstFolderId}</if>
 		<if test="secondFolderId!=0">and secondFolderId=#{secondFolderId}</if>
 		<if test="thirdFolderId!=0">and thirdFolderId=#{thirdFolderId}</if>
 		<if test="fourthFolderId!=0"> and fourthFolderId=#{fourthFolderId}</if>
 	</select>
 
-	<select id="getArticleListByStatus" resultType="com.shishuo.cms.entity.vo.ArticleVo">
+	<select id="getArticleListByFolderId" resultType="com.shishuo.cms.entity.vo.ArticleVo">
 		select * from
 		article
-		where status=#{status}
-		<if test="firstFolderId!=0">and firstFolderId=#{firstFolderId}</if>
+		<if test="firstFolderId!=0">where firstFolderId=#{firstFolderId}</if>
 		<if test="secondFolderId!=0">and secondFolderId=#{secondFolderId}</if>
 		<if test="thirdFolderId!=0">and thirdFolderId=#{thirdFolderId}</if>
 		<if test="fourthFolderId!=0"> and fourthFolderId=#{fourthFolderId}</if>
@@ -128,13 +121,4 @@
 		#{offset},#{rows}
 	</select>
 
-	<select id="getArticleCountByStatus" resultType="Integer">
-		select
-		count(*)
-		from article where status=#{status}
-		<if test="firstFolderId!=0">and firstFolderId=#{firstFolderId}</if>
-		<if test="secondFolderId!=0">and secondFolderId=#{secondFolderId}</if>
-		<if test="thirdFolderId!=0">and thirdFolderId=#{thirdFolderId}</if>
-		<if test="fourthFolderId!=0"> and fourthFolderId=#{fourthFolderId}</if>
-	</select>
 </mapper>  

@@ -20,14 +20,9 @@
 	<!-- 所有以.html和.json的请求都由dispatcherServlet来处理的配置 -->
 	<servlet-mapping>
 		<servlet-name>spring</servlet-name>
-		<url-pattern>*.htm</url-pattern>
+		<url-pattern>/*</url-pattern>
 	</servlet-mapping>
-
-	<servlet-mapping>
-		<servlet-name>spring</servlet-name>
-		<url-pattern>*.json</url-pattern>
-	</servlet-mapping>
-
+	
 	<filter>
 		<filter-name>encodingFilter</filter-name>
 		<filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
@@ -51,13 +46,13 @@
 	</filter-mapping>
 
 	<filter>
-		<filter-name>admin</filter-name>
-		<filter-class>com.shishuo.cms.filter.AdminFilter</filter-class>
+		<filter-name>manage</filter-name>
+		<filter-class>com.shishuo.cms.filter.ManageFilter</filter-class>
 	</filter>
 
 	<filter-mapping>
-		<filter-name>admin</filter-name>
-		<url-pattern>/admin/*</url-pattern>
+		<filter-name>manage</filter-name>
+		<url-pattern>/manage/*</url-pattern>
 	</filter-mapping>
 
 	<!-- 让web应用程序启动那个时自动添加属性文件 -->
@@ -84,7 +79,7 @@
 	<listener>
 		<listener-class>org.springframework.web.util.WebAppRootListener</listener-class>
 	</listener>
-	
+
 	<session-config>
 		<session-timeout>20</session-timeout>
 	</session-config>

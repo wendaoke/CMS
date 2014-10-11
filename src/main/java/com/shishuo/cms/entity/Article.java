@@ -6,8 +6,9 @@
 
 package com.shishuo.cms.entity;
 
-import java.math.BigDecimal;
 import java.util.Date;
+
+import org.apache.commons.lang3.StringUtils;
 
 import com.shishuo.cms.constant.ArticleConstant;
 
@@ -51,19 +52,14 @@ public class Article {
 	private long adminId;
 
 	/**
-	 * 英文名称
+	 * 文件名称
 	 */
-	private String ename;
+	private String title;
 
 	/**
 	 * 文件名称
 	 */
-	private String name;
-
-	/**
-	 * 文件简介
-	 */
-	private String title;
+	private String summary;
 
 	/**
 	 * 文件内容
@@ -71,24 +67,9 @@ public class Article {
 	private String content;
 
 	/**
-	 * 文件描述
+	 * 封面
 	 */
-	private String description;
-
-	/**
-	 * 报价
-	 */
-	private BigDecimal price;
-
-	/**
-	 * 实际价格
-	 */
-	private BigDecimal realPrice;
-
-	/**
-	 * 文件被copy的次数，相当于是商品的库存
-	 */
-	private int copyCount;
+	private String picture;
 
 	/**
 	 * 浏览人数
@@ -106,11 +87,6 @@ public class Article {
 	private ArticleConstant.Status status;
 
 	/**
-	 * 
-	 */
-	private ArticleConstant.Owner owner;
-
-	/**
 	 * 创建时间
 	 */
 	private Date createTime;
@@ -120,25 +96,12 @@ public class Article {
 	 */
 	private Date updateTime;
 
-	/**
-	 * 过期时间
-	 */
-	private Date expireTime;
-
 	public long getFourthFolderId() {
 		return fourthFolderId;
 	}
 
 	public void setFourthFolderId(long fourthFolderId) {
 		this.fourthFolderId = fourthFolderId;
-	}
-
-	public ArticleConstant.Owner getOwner() {
-		return owner;
-	}
-
-	public void setOwner(ArticleConstant.Owner owner) {
-		this.owner = owner;
 	}
 
 	public long getArticleId() {
@@ -173,12 +136,20 @@ public class Article {
 		this.thirdFolderId = thirdFolderId;
 	}
 
-	public String getName() {
-		return name;
+	public String getTitle() {
+		return title;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	public String getSummary() {
+		return summary;
+	}
+
+	public void setSummary(String summary) {
+		this.summary = summary;
 	}
 
 	public String getContent() {
@@ -229,38 +200,6 @@ public class Article {
 		this.commentCount = commentCount;
 	}
 
-	public String getEname() {
-		return ename;
-	}
-
-	public void setEname(String ename) {
-		this.ename = ename;
-	}
-
-	public BigDecimal getPrice() {
-		return price;
-	}
-
-	public void setPrice(BigDecimal price) {
-		this.price = price;
-	}
-
-	public BigDecimal getRealPrice() {
-		return realPrice;
-	}
-
-	public void setRealPrice(BigDecimal realPrice) {
-		this.realPrice = realPrice;
-	}
-
-	public int getCopyCount() {
-		return copyCount;
-	}
-
-	public void setCopyCount(int copyCount) {
-		this.copyCount = copyCount;
-	}
-
 	public Date getUpdateTime() {
 		return updateTime;
 	}
@@ -269,28 +208,12 @@ public class Article {
 		this.updateTime = updateTime;
 	}
 
-	public Date getExpireTime() {
-		return expireTime;
+	public String getPicture() {
+		return picture;
 	}
 
-	public void setExpireTime(Date expireTime) {
-		this.expireTime = expireTime;
-	}
-
-	public String getTitle() {
-		return title;
-	}
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	public String getDescription() {
-		return description;
-	}
-
-	public void setDescription(String description) {
-		this.description = description;
+	public void setPicture(String picture) {
+		this.picture = picture;
 	}
 
 }

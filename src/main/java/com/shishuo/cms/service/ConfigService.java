@@ -58,7 +58,7 @@ public class ConfigService {
 	 * @param key
 	 * @return Integer
 	 */
-	@CacheEvict(value = "config", key = "#key")
+	@CacheEvict(value = "config")
 	public int deleteConfigByKey(String key) {
 		return configDao.deleteConfig(key);
 	}
@@ -73,12 +73,12 @@ public class ConfigService {
 	 * @param key
 	 * @param value
 	 */
-	@CacheEvict(value = "config", key = "#key")
+	@CacheEvict(value = "config")
 	public Config updagteConfigByKey(String key, String value) {
 		Config config = configDao.getConfigByKey(key);
 		config.setValue(value);
 		configDao.updateConfig(config);
-		this.getConfigByKey(key);
+		this.getStringByKey(key);
 		return config;
 	}
 
@@ -86,13 +86,27 @@ public class ConfigService {
 	 * @param key
 	 * @return
 	 */
-	@Cacheable(value = "config", key = "#key")
-	public String getConfigByKey(String key) {
+	@Cacheable(value = "config")
+	public String getStringByKey(String key) {
 		Config config = configDao.getConfigByKey(key);
 		if (config == null) {
 			return "";
 		} else {
 			return config.getValue();
+		}
+	}
+
+	/**
+	 * @param key
+	 * @return
+	 */
+	@Cacheable(value = "config")
+	public int getIntKey(String key) {
+		Config config = configDao.getConfigByKey(key);
+		if (config == null) {
+			return 0;
+		} else {
+			return Integer.parseInt(config.getValue());
 		}
 	}
 }

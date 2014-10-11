@@ -12,7 +12,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.shishuo.cms.constant.FolderConstant;
-import com.shishuo.cms.constant.FolderConstant.Status;
+import com.shishuo.cms.constant.FolderConstant.status;
 import com.shishuo.cms.entity.Folder;
 import com.shishuo.cms.entity.vo.FolderVo;
 
@@ -50,13 +50,6 @@ public interface FolderDao {
 	// ///////////////////////////////
 	// ///// 修改 ////////
 	// ///////////////////////////////
-	/**
-	 * 更新目录
-	 * 
-	 * @param folder
-	 * @return Integer
-	 */
-	public int updateFolder(Folder folder);
 
 	/**
 	 * @param folderId
@@ -65,15 +58,13 @@ public interface FolderDao {
 	 * @param content
 	 * @param status
 	 */
-	public void updateFolder(@Param("folderId") long folderId,
+	public void updateFolderById(@Param("folderId") long folderId,
 			@Param("name") String name, @Param("ename") String ename,
+			@Param("status") FolderConstant.status status,
 			@Param("content") String content);
 
 	public int updateSort(@Param("folderId") long folderId,
 			@Param("sort") int sort);
-
-	public int updatePath(@Param("folderId") long folderId,
-			@Param("path") String path);
 
 	public int updateCount(@Param("folderId") long folderId,
 			@Param("count") int count);
@@ -97,22 +88,7 @@ public interface FolderDao {
 	 */
 	public List<FolderVo> getFolderListByFatherId(
 			@Param("fatherId") long fatherId,
-			@Param("status") FolderConstant.Status status);
-
-	/**
-	 * 得到folder的所有path
-	 * 
-	 */
-	public List<String> getAllFolderPath();
-
-	/**
-	 * 通过ename获得指定目录
-	 * 
-	 * @param ename
-	 * @return Folder
-	 */
-	@Deprecated
-	public Folder getFolderByEname(String ename);
+			@Param("status") FolderConstant.status status);
 
 	/**
 	 * 通过ename和fatherId获得指定目录
@@ -121,19 +97,18 @@ public interface FolderDao {
 	 * @param fatherId
 	 * @return
 	 */
-	public FolderVo getFolderByEnameAndFatherId(@Param("ename") String ename,
-			@Param("fatherId") long fatherId);
-
-	/**
-	 * @param folderId
-	 * @param type
-	 */
-	public void updateType(@Param("folderId")  long folderId, @Param("type")  FolderConstant.Type type);
+	public Folder getFolderByEname(@Param("ename") String ename);
 
 	/**
 	 * @param folderId
 	 * @param status
 	 */
-	public void updateStatus(@Param("folderId")   long folderId, @Param("status")  Status status);
+	public void updateStatus(@Param("folderId") long folderId,
+			@Param("status") status status);
+
+	public int updatePath(@Param("folderId") long folderId,
+			@Param("path") String path);
+
+	public List<FolderVo> getAllFolderList();
 
 }

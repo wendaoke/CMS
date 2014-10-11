@@ -1,61 +1,41 @@
-/*
- *	Copyright © 2013 Changsha Shishuo Network Technology Co., Ltd. All rights reserved.
- *	长沙市师说网络科技有限公司 版权所有
- *	http://www.shishuo.com
- */
-
 package com.shishuo.cms.entity.vo;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import com.shishuo.cms.entity.Admin;
+import org.apache.commons.lang3.StringUtils;
+
 import com.shishuo.cms.entity.Article;
 import com.shishuo.cms.entity.Folder;
 
-/**
- * @author Herbert
- * 
- */
 public class ArticleVo extends Article {
 
-	private Admin admin;
+	private Folder folder;
 
-	private FolderVo folder;
-
-	private List<AttachmentVo> attachmentList = new ArrayList<AttachmentVo>();
-
-	private List<Folder> folderPathList = new ArrayList<Folder>();
-
-	public Admin getAdmin() {
-		return admin;
+	private List<FolderVo> folderPathList;
+	
+	private String pictureUrl;
+	
+	public String getPictureUrl() {
+		if(StringUtils.isBlank(this.getPicture())){
+			return "upload/blank.jpg";
+		}else{
+			return this.getPicture();
+		}
 	}
 
-	public void setAdmin(Admin admin) {
-		this.admin = admin;
-	}
-
-	public FolderVo getFolder() {
+	public Folder getFolder() {
 		return folder;
 	}
 
-	public void setFolder(FolderVo folder) {
+	public void setFolder(Folder folder) {
 		this.folder = folder;
 	}
 
-	public List<AttachmentVo> getAttachmentList() {
-		return attachmentList;
-	}
-
-	public void setAttachmentList(List<AttachmentVo> attachmentList) {
-		this.attachmentList = attachmentList;
-	}
-
-	public List<Folder> getFolderPathList() {
+	public List<FolderVo> getFolderPathList() {
 		return folderPathList;
 	}
 
-	public void setFolderPathList(List<Folder> folderPathList) {
+	public void setFolderPathList(List<FolderVo> folderPathList) {
 		this.folderPathList = folderPathList;
 	}
 
@@ -70,5 +50,4 @@ public class ArticleVo extends Article {
 			return this.getFirstFolderId();
 		}
 	}
-
 }

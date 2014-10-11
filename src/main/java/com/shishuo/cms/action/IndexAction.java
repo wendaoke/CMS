@@ -29,15 +29,31 @@ public class IndexAction extends BaseAction {
 	 * @param modelMap
 	 * @return
 	 */
+	@RequestMapping(value = "/", method = RequestMethod.GET)
+	public String defalut(
+			@RequestParam(value = "p", defaultValue = "1") long p,
+			ModelMap modelMap) {
+		return home(p, modelMap);
+	}
+
+	/**
+	 * 首页
+	 * 
+	 * @param pageNum
+	 * @param modelMap
+	 * @return
+	 */
 	@RequestMapping(value = "/index.htm", method = RequestMethod.GET)
 	public String home(@RequestParam(value = "p", defaultValue = "1") long p,
 			ModelMap modelMap) {
 		try {
 			modelMap.addAttribute("p", p);
+			modelMap.addAttribute("g_folderId", 0);
 			return themeService.getDefaultTemplate();
 		} catch (TemplateNotFoundException e) {
+			modelMap.addAttribute("g_folderId", 0);
 			logger.fatal(e.getMessage());
-			return themeService.getTemplatePath("404");
+			return themeService.get404();
 		}
 	}
 
@@ -47,8 +63,9 @@ public class IndexAction extends BaseAction {
 	 * @return
 	 */
 	@RequestMapping(value = "/404.htm", method = RequestMethod.GET)
-	public String pageNotFound() {
-		return themeService.getTemplatePath("404");
+	public String pageNotFound(ModelMap modelMap) {
+		modelMap.addAttribute("g_folderId", 0);
+		return themeService.get404();
 	}
 
 	/**
@@ -57,7 +74,8 @@ public class IndexAction extends BaseAction {
 	 * @return
 	 */
 	@RequestMapping(value = "/500.htm", method = RequestMethod.GET)
-	public String error() {
-		return themeService.getTemplatePath("500");
+	public String error(ModelMap modelMap) {
+		modelMap.addAttribute("g_folderId", 0);
+		return themeService.get500();
 	}
 }

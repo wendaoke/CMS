@@ -13,11 +13,14 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import com.shishuo.cms.constant.ConfigConstant;
 import com.shishuo.cms.constant.SystemConstant;
 import com.shishuo.cms.entity.Folder;
+import com.shishuo.cms.entity.vo.FolderVo;
+import com.shishuo.cms.exception.FolderNotFoundException;
 import com.shishuo.cms.exception.TemplateNotFoundException;
 
 /**
@@ -36,6 +39,23 @@ public class TemplateService {
 
 	@Autowired
 	private ConfigService configService;
+
+	@Autowired
+	private FolderService folderService;
+
+	/**
+	 * @return
+	 */
+	public String get404() {
+		return this.getTemplatePath("404");
+	}
+
+	/**
+	 * @return
+	 */
+	public String get500() {
+		return this.getTemplatePath("500");
+	}
 
 	/**
 	 * 得到首页（默认页）模板
@@ -59,12 +79,15 @@ public class TemplateService {
 	/**
 	 * 得到文件夹模板
 	 * 
-	 * @param folderPathList
+	 * @param folderId
 	 * @return
 	 * @throws TemplateNotFoundException
+	 * @throws FolderNotFoundException
 	 */
-	public String getFolderTemplate(List<Folder> folderPathList)
-			throws TemplateNotFoundException {
+	public String getFolderTemplate(long folderId)
+			throws TemplateNotFoundException, FolderNotFoundException {
+		List<FolderVo> folderPathList = folderService
+				.getFolderPathListByFolderId(folderId);
 		List<String> themeOrderList = new ArrayList<String>();
 		themeOrderList.add(FOLDER_TEMPLATE_PREFIX);
 		String themeString = FOLDER_TEMPLATE_PREFIX;
@@ -80,7 +103,8 @@ public class TemplateService {
 			}
 		}
 		throw new TemplateNotFoundException("模板文件："
-				+ this.getTemplatePath(FOLDER_TEMPLATE_PREFIX) + " 不存在！！");
+				+ this.getTemplatePath(FOLDER_TEMPLATE_PREFIX) + ".ftl"
+				+ " 不存在！！");
 	}
 
 	/**
@@ -90,9 +114,12 @@ public class TemplateService {
 	 * @param articleId
 	 * @return
 	 * @throws TemplateNotFoundException
+	 * @throws FolderNotFoundException
 	 */
-	public String getArticleTemplate(List<Folder> folderPathList, long articleId)
-			throws TemplateNotFoundException {
+	public String getArticleTemplate(long folderId, long articleId)
+			throws TemplateNotFoundException, FolderNotFoundException {
+		List<FolderVo> folderPathList = folderService
+				.getFolderPathListByFolderId(folderId);
 		List<String> themeOrderList = new ArrayList<String>();
 		themeOrderList.add(FILE_TEMPLATE_PREFIX);
 		String themeString = FILE_TEMPLATE_PREFIX;
@@ -118,10 +145,10 @@ public class TemplateService {
 	 * @param theme
 	 * @return
 	 */
-	public String getTemplatePath(String template) {
-		return "/themes/"
-				+ configService.getConfigByKey(ConfigConstant.SYS_THEME) + "/"
-				+ template;
+	private String getTemplatePath(String template) {
+		return "/template/"
+				+ configService.getStringByKey(ConfigConstant.SHISHUO_TEMPLATE)
+				+ "/" + template;
 	}
 
 	/**
@@ -130,15 +157,16 @@ public class TemplateService {
 	 * @param theme
 	 * @return
 	 */
+	@Cacheable("default")
 	public Boolean isExist(String theme) {
-		String themePath = SystemConstant.SHISHUO_CMS_ROOT + "/themes/"
-				+ configService.getConfigByKey(ConfigConstant.SYS_THEME) + "/"
-				+ theme + ".ftl";
-		File file = new File(themePath);
+		String themePath = "/WEB-INF/static/template/"
+				+ configService.getStringByKey(ConfigConstant.SHISHUO_TEMPLATE)
+				+ "/" + theme + ".ftl";
+		File file = new File(SystemConstant.SHISHUO_CMS_ROOT + themePath);
 		if (file.exists()) {
 			return true;
 		} else {
-			logger.info("模板不存在：" + themePath);
+			logger.info("模板不存在：" + file.getAbsolutePath());
 			return false;
 		}
 	}

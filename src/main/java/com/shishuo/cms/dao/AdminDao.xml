@@ -63,7 +63,7 @@
 		select * from admin where adminId=#{adminId}
 	</select>
 
-	<select id="getAdminByEmail" resultType="com.shishuo.cms.entity.vo.AdminVo">
+	<select id="getAdminByEmail" resultType="com.shishuo.cms.entity.Admin">
 		select * from admin
 		where email=#{email}
 	</select>

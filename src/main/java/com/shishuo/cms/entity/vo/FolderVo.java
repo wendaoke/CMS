@@ -1,9 +1,3 @@
-/*
- *	Copyright © 2013 Changsha Shishuo Network Technology Co., Ltd. All rights reserved.
- *	长沙市师说网络科技有限公司 版权所有
- *	http://www.shishuo.com
- */
-
 package com.shishuo.cms.entity.vo;
 
 import java.util.ArrayList;
@@ -13,16 +7,20 @@ import com.shishuo.cms.entity.Folder;
 
 public class FolderVo extends Folder {
 
+	private String pathName;
+	/**
+	 * 子目录
+	 */
 	private List<FolderVo> folderList = new ArrayList<FolderVo>();
 
-	private List<String> folderPathList = new ArrayList<String>();
+	private String owner;
 
-	public List<String> getFolderPathList() {
-		return folderPathList;
+	public String getPathName() {
+		return pathName;
 	}
 
-	public void setFolderPathList(List<String> folderPathList) {
-		this.folderPathList = folderPathList;
+	public void setPathName(String pathName) {
+		this.pathName = pathName;
 	}
 
 	public List<FolderVo> getFolderList() {
@@ -57,4 +55,13 @@ public class FolderVo extends Folder {
 			return ids[level - 1];
 		}
 	}
+
+	public String getOwner() {
+		return owner;
+	}
+
+	public void setOwner(String owner) {
+		this.owner = owner;
+	}
+
 }

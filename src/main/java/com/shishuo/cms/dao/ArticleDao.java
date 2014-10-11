@@ -35,9 +35,6 @@ public interface ArticleDao {
 	 */
 	public int addArticle(Article article);
 
-	public int deleteArticleListByStatus(
-			@Param("status") ArticleConstant.Status status);
-
 	// ///////////////////////////////
 	// ///// 刪除 ////////
 	// ///////////////////////////////
@@ -47,7 +44,7 @@ public interface ArticleDao {
 	 * 
 	 * @return boolean
 	 */
-	public boolean deleteArticle(@Param("articleId") long articleId);
+	public boolean deleteArticleById(@Param("articleId") long articleId);
 
 	// ///////////////////////////////
 	// ///// 修改 ////////
@@ -60,15 +57,6 @@ public interface ArticleDao {
 	 * @return Integer
 	 */
 	public int updateArticle(Article article);
-
-	/**
-	 * 放进回收站或者还原
-	 * 
-	 * @param Article
-	 * @return Integer
-	 */
-	public int updateStatusByArticleId(@Param("articleId") long articleId,
-			@Param("status") ArticleConstant.Status status);
 
 	/**
 	 * 更新浏览人数
@@ -109,7 +97,7 @@ public interface ArticleDao {
 	 * @param foderId
 	 * @return List<FileVo>
 	 */
-	public List<ArticleVo> getArticleListByFoderIdPath(
+	public List<ArticleVo> getArticleListByFoderIdAndStatus(
 			@Param("firstFolderId") long firstFolderId,
 			@Param("secondFolderId") long secondFolderId,
 			@Param("thirdFolderId") long thirdFolderId,
@@ -123,7 +111,7 @@ public interface ArticleDao {
 	 * @param foderId
 	 * @return Integer
 	 */
-	public int getArticleCountByFoderIdPath(
+	public int getArticleCountByFoderIdAndStatus(
 			@Param("firstFolderId") long firstFolderId,
 			@Param("secondFolderId") long secondFolderId,
 			@Param("thirdFolderId") long thirdFolderId,
@@ -136,20 +124,12 @@ public interface ArticleDao {
 	 * @param foderId
 	 * @return List<FileVo>
 	 */
-	public List<ArticleVo> getArticleListByStatus(
+	public List<ArticleVo> getArticleListByFolderId(
 			@Param("firstFolderId") long firstFolderId,
 			@Param("secondFolderId") long secondFolderId,
 			@Param("thirdFolderId") long thirdFolderId,
 			@Param("fourthFolderId") long fourthFolderId,
-			@Param("status") ArticleConstant.Status status,
 			@Param("offset") long offset, @Param("rows") long rows);
-
-	public int getArticleCountByStatus(
-			@Param("firstFolderId") long firstFolderId,
-			@Param("secondFolderId") long secondFolderId,
-			@Param("thirdFolderId") long thirdFolderId,
-			@Param("fourthFolderId") long fourthFolderId,
-			@Param("status") ArticleConstant.Status status);
 
 	/**
 	 * @param firstFolderId
@@ -158,7 +138,7 @@ public interface ArticleDao {
 	 * @param fourthFolderId
 	 * @return
 	 */
-	public int getArticleCountByFoderId(
+	public int getArticleCountByFolderId(
 			@Param("firstFolderId") long firstFolderId,
 			@Param("secondFolderId") long secondFolderId,
 			@Param("thirdFolderId") long thirdFolderId,

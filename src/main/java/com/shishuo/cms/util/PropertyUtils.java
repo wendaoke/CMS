@@ -17,8 +17,6 @@ import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
 import org.springframework.beans.factory.config.PropertyPlaceholderConfigurer;
 
-import com.shishuo.cms.exception.PropertyIsNullException;
-
 /**
  * 属性工具类
  * 
@@ -44,12 +42,10 @@ public class PropertyUtils extends PropertyPlaceholderConfigurer {
 		}
 	}
 
-	public static String getValue(String name) throws PropertyIsNullException {
+	public static String getValue(String name) {
 		String value = propertyMap.get(name);
 		if (StringUtils.isBlank(value)) {
-			String error = "属性[" + name + "]的值为空";
-			logger.fatal(error);
-			throw new PropertyIsNullException(error);
+			return "";
 		} else {
 			return value;
 		}
@@ -66,9 +62,6 @@ public class PropertyUtils extends PropertyPlaceholderConfigurer {
 				break;
 			}
 		}
-//		if (!cmsRoot.endsWith(File.separator)) {
-//			cmsRoot += File.separator;
-//		}
 		logger.info(cmsRoot);
 		return cmsRoot;
 	}

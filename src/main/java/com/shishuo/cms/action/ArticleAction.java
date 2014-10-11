@@ -6,8 +6,6 @@
 
 package com.shishuo.cms.action;
 
-import java.util.List;
-
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -15,103 +13,33 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.shishuo.cms.entity.Article;
 import com.shishuo.cms.entity.Folder;
-import com.shishuo.cms.exception.ArticleNotFoundException;
-import com.shishuo.cms.exception.FolderNotFoundException;
-import com.shishuo.cms.exception.TemplateNotFoundException;
+import com.shishuo.cms.entity.vo.ArticleVo;
 
 /**
  * @author Herbert
  * 
  */
 @Controller
+@RequestMapping("/article")
 public class ArticleAction extends BaseAction {
 
-	/**
-	 * 一级目录页
-	 * 
-	 * @param ename
-	 * @param pageNum
-	 * @param modelMap
-	 * @return
-	 */
-	@RequestMapping(value = "/{firstFolderEname}/{articleId}.htm", method = RequestMethod.GET)
-	public String firstFolder(@PathVariable String firstFolderEname,
-			@PathVariable long articleId,
-			@RequestParam(value = "p", defaultValue = "1") long p,
-			ModelMap modelMap) {
-		return fourthFolder(firstFolderEname, null, null, null, articleId, p,
-				modelMap);
-	}
-
-	/**
-	 * 二级目录页
-	 * 
-	 * @param ename
-	 * @param pageNum
-	 * @param modelMap
-	 * @return
-	 */
-	@RequestMapping(value = "/{firstFolderEname}/{secondFolderEname}/{articleId}.htm", method = RequestMethod.GET)
-	public String secondFolder(@PathVariable String firstFolderEname,
-			@PathVariable String secondFolderEname, @PathVariable long articleId,
-			@RequestParam(value = "p", defaultValue = "1") long p,
-			ModelMap modelMap) {
-		return fourthFolder(firstFolderEname, secondFolderEname, null, null,
-				articleId, p, modelMap);
-	}
-
-	/**
-	 * 三级目录页
-	 * 
-	 * @param ename
-	 * @param pageNum
-	 * @param modelMap
-	 * @return
-	 */
-	@RequestMapping(value = "/{firstFolderEname}/{secondFolderEname}/{thirdFolderEname}/{articleId}.htm", method = RequestMethod.GET)
-	public String thirdFolder(@PathVariable String firstFolderEname,
-			@PathVariable String secondFolderEname,
-			@PathVariable String thirdFolderEname, @PathVariable long articleId,
-			@RequestParam(value = "p", defaultValue = "1") long p,
-			ModelMap modelMap) {
-		return fourthFolder(firstFolderEname, secondFolderEname,
-				thirdFolderEname, null, articleId, p, modelMap);
-	}
-
-	/**
-	 * 四级目录页
-	 * 
-	 * @param ename
-	 * @param pageNum
-	 * @param modelMap
-	 * @return
-	 */
-	@RequestMapping(value = "/{firstFolderEname}/{secondFolderEname}/{thirdFolderEname}/{fourthFolderEname}/{articleId}.htm", method = RequestMethod.GET)
-	public String fourthFolder(@PathVariable String firstFolderEname,
-			@PathVariable String secondFolderEname,
-			@PathVariable String thirdFolderEname,
-			@PathVariable String fourthFolderEname, @PathVariable long articleId,
+	@RequestMapping(value = "/{articleId}.htm", method = RequestMethod.GET)
+	public String folder(@PathVariable long articleId,
 			@RequestParam(value = "p", defaultValue = "1") long p,
 			ModelMap modelMap) {
 		try {
-			List<Folder> folderPathList = packageFolderByEname(
-					firstFolderEname, secondFolderEname, thirdFolderEname,
-					fourthFolderEname, modelMap);
-			Article article = fileService.getArticleByArticleId(articleId);
+			ArticleVo article = fileService.getArticleById(articleId);
+			Folder folder = folderService.getFolderById(article.getFolderId());
 			modelMap.addAttribute("p", p);
+			modelMap.addAttribute("folder", folder);
 			modelMap.addAttribute("article", article);
-			return themeService.getArticleTemplate(folderPathList, articleId);
-		} catch (FolderNotFoundException e) {
-			logger.fatal(e.getMessage());
-			return themeService.getTemplatePath("404");
-		} catch (TemplateNotFoundException e) {
-			logger.fatal(e.getMessage());
-			return themeService.getTemplatePath("404");
-		} catch (ArticleNotFoundException e) {
-			logger.fatal(e.getMessage());
-			return themeService.getTemplatePath("404");
+			modelMap.addAttribute("g_folderId", folder.getFolderId());
+			return themeService.getArticleTemplate(article.getFolderId(),
+					articleId);
+		} catch (Exception e) {
+			modelMap.addAttribute("g_folderId", 0);
+			return themeService.get404();
 		}
 	}
 }
