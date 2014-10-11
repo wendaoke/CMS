@@ -61,7 +61,8 @@ public interface FolderDao {
 	public void updateFolderById(@Param("folderId") long folderId,
 			@Param("name") String name, @Param("ename") String ename,
 			@Param("status") FolderConstant.status status,
-			@Param("content") String content);
+			@Param("content") String content, @Param("height") int height,
+			@Param("width") int width);
 
 	public int updateSort(@Param("folderId") long folderId,
 			@Param("sort") int sort);

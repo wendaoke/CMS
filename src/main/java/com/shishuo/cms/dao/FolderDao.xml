@@ -50,7 +50,7 @@
 	</update>
 	
 	<update id="updateFolderById">
-		update folder set name=#{name},ename=#{ename},status=#{status},content=#{content} where folderId=#{folderId}
+		update folder set name=#{name},ename=#{ename},status=#{status},content=#{content},height=#{height},width=#{width} where folderId=#{folderId}
 	</update>
 
 	<!-- ############################## -->

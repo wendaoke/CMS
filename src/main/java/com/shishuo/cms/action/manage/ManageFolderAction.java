@@ -111,6 +111,8 @@ public class ManageFolderAction extends ManageBaseAction {
 		modelMap.put("folder", folder);
 		modelMap.put("folderList", folderList);
 		modelMap.put("pathList", pathList);
+		modelMap.put("folderName", "");
+		modelMap.put("folderEname", "");
 		modelMap.put("folderAll", folderService.getAllFolderList(0));
 		return "manage/folder/list";
 	}
@@ -184,6 +186,8 @@ public class ManageFolderAction extends ManageBaseAction {
 	public JsonVo<String> update(
 			@RequestParam(value = "folderId") long folderId,
 			@RequestParam(value = "name") String name,
+			@RequestParam(value = "height") int height,
+			@RequestParam(value = "width") int width,
 			@RequestParam(value = "ename") String ename,
 			@RequestParam(value = "status") FolderConstant.status status,
 			@RequestParam(value = "content", required = false) String content) {
@@ -211,7 +215,7 @@ public class ManageFolderAction extends ManageBaseAction {
 			validate(json);
 			ename = ename.toLowerCase();
 			folderService.updateFolderById(folderId, name, ename, status,
-					content);
+					content, height, width);
 
 			json.setResult(true);
 		} catch (Exception e) {

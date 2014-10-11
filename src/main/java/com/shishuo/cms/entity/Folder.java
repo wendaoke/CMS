@@ -79,11 +79,6 @@ public class Folder {
 	 */
 	private Date createTime;
 
-	/**
-	 * 更新时间
-	 */
-	private Date updateTime;
-
 	public long getFolderId() {
 		return folderId;
 	}
@@ -171,15 +166,7 @@ public class Folder {
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
 	}
-
-	public Date getUpdateTime() {
-		return updateTime;
-	}
-
-	public void setUpdateTime(Date updateTime) {
-		this.updateTime = updateTime;
-	}
-
+	
 	public int getWidth() {
 		return width;
 	}

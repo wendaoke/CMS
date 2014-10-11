@@ -123,8 +123,9 @@ public class FolderService {
 	 */
 	@CacheEvict(value = "folder", allEntries = true)
 	public void updateFolderById(long folderId, String name, String ename,
-			FolderConstant.status status, String content) {
-		folderDao.updateFolderById(folderId, name, ename, status, content);
+			FolderConstant.status status, String content, int height, int width) {
+		folderDao.updateFolderById(folderId, name, ename, status, content,
+				height, width);
 	}
 
 	/**
@@ -190,20 +191,20 @@ public class FolderService {
 	public List<FolderVo> getAllFolderList(long adminId) {
 		List<FolderVo> firstFolderList = folderDao.getAllFolderList();
 		HashMap<String, FolderVo> folderMap = new HashMap<String, FolderVo>();
-		if (adminId == 0) {
-			for (FolderVo folder : firstFolderList) {
-				folderMap.put(folder.getFolderId() + "", folder);
+		for (FolderVo folder : firstFolderList) {
+			folderMap.put(folder.getFolderId() + "", folder);
+		}
+		for (FolderVo folder : firstFolderList) {
+			folderMap.put(folder.getFolderId() + "", folder);
+			AdminFolderVo adminFolder = adminFolderService.getAdminFolderById(
+					adminId, folder.getFolderId());
+			if (adminFolder == null) {
+				folder.setOwner("no");
+			} else {
+				folder.setOwner("yes");
 			}
-		} else {
-			for (FolderVo folder : firstFolderList) {
-				folderMap.put(folder.getFolderId() + "", folder);
-				AdminFolderVo adminFolder = adminFolderService
-						.getAdminFolderById(adminId, folder.getFolderId());
-				if (adminFolder == null) {
-					folder.setOwner("no");
-				} else {
-					folder.setOwner("yes");
-				}
+			if(adminId==1){
+				folder.setOwner("yes");
 			}
 		}
 		for (FolderVo folder : firstFolderList) {

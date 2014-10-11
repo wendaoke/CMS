@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<base href="${BASE_PATH}/"> 
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -82,34 +81,22 @@
 				<!-- sidebar menu goes here-->
 				<ul class="sidebar-menu" id="nav-accordion">
 					<li class="">
-						<a <#if menu="default">class="active"</#if> href="${BASE_PATH}/manage/index.htm"> <i class="icon-home"></i> <span>首页</span></a>
+						<a <#if menu="article">class="active"</#if> href="${BASE_PATH}/manage/article/list.htm"> <i class="icon-book"></i> <span>文章列表</span></a>
 					</li>
 					<li class="sub-menu">
 						<a href="${BASE_PATH}/manage/headline/list.htm" <#if menu="headline">class="active"</#if>> <i class="icon-tags"></i> <span>头图</span></a>
 					</li>
-					<li class="sub-menu">
-						<a href="javascript:;" <#if menu="folder">class="active"</#if>> <i class="icon-folder-open"></i> <span>目录</span></a>
-						<ul class="sub">
-							<li <#if submenu="add_folder">class="active"</#if>><a href="${BASE_PATH}/manage/folder/add.htm">增加目录</a></li>
-							<li <#if submenu="folder_list">class="active"</#if>><a href="${BASE_PATH}/manage/folder/list.htm">目录列表</a></li>
-						</ul>
-					</li>
-					<li class="sub-menu">
-						<a href="javascript:;" <#if menu="article">class="active"</#if>> <i class="icon-book"></i> <span>文章</span></a>
-						<ul class="sub">
-							<li <#if submenu="add_article">class="active"</#if>><a href="${BASE_PATH}/manage/article/add.htm">增加文章</a></li>
-							<li <#if submenu="article_list">class="active"</#if>><a href="${BASE_PATH}/manage/article/list.htm">文章列表</a></li>
-						</ul>
-					</li>
+					<li class="">
+						<a <#if menu="folder">class="active"</#if> href="${BASE_PATH}/manage/folder/list.htm"> <i class="icon-folder-open"></i> <span>目录列表</span></a>
+					</li>	
 					<li class="">
 						<a <#if menu="message">class="active"</#if> href="${BASE_PATH}/manage/guestbook/list.htm"> <i class="icon-home"></i> <span>留言列表</span></a>
-					</li>																
-					<li class="sub-menu ">
-						<a href="javascript:;" <#if menu="system">class="active"</#if>> <i class="icon-cogs"></i> <span>设置</span></a>
-						<ul class="sub">
-							<li <#if submenu="admin_list">class="active"</#if>><a href="${BASE_PATH}/manage/admin/manage.htm">管理员管理</a></li>
-							<li <#if submenu="update_admin">class="active"</#if>><a href="${BASE_PATH}/manage/admin/update.htm">修改个人信息</a></li>
-						</ul>
+					</li>
+					<li class="">
+						<a <#if menu="admin_list">class="active"</#if> href="${BASE_PATH}/manage/admin/manage.htm"> <i class="icon-cogs"></i> <span>管理员管理</span></a>
+					</li>
+					<li class="">
+						<a <#if menu="update_password">class="active"</#if> href="${BASE_PATH}/manage/admin/update.htm"> <i class="icon-home"></i> <span>修改密码</span></a>
 					</li>
 				</ul>
 			</div>

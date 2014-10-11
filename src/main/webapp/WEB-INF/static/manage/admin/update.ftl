@@ -1,4 +1,4 @@
-<#assign menu="system">
+<#assign menu="update_password">
 <#assign submenu="update_admin">
 <#include "/manage/head.ftl">
 <style type="text/css">

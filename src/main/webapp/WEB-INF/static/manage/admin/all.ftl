@@ -1,4 +1,4 @@
-<#assign menu="system">
+<#assign menu="admin_list">
 <#assign submenu="admin_list">
 <#include "/manage/head.ftl">
 <style type="text/css">

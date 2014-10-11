@@ -34,6 +34,22 @@
 	                              </input>
 	                          </div>
 	                        </div>
+	                        <div class="form-group">
+	                          <label class="col-sm-2 col-sm-2 control-label">封面高</label>
+	                          <div class="col-sm-10">
+	                              <input type="text" style="font-size:15px;width: 300px;" class="form-control" name="height"
+	                              	placeholder="封面高" id="height" value="${folder.height}">
+	                              </input>
+	                          </div>
+	                        </div>
+	                        <div class="form-group">
+	                          <label class="col-sm-2 col-sm-2 control-label">封面宽</label>
+	                          <div class="col-sm-10">
+	                              <input type="text" style="font-size:15px;width: 300px;" class="form-control" name="width"
+	                              	placeholder="封面宽" id="width" value="${folder.width}">
+	                              </input>
+	                          </div>
+	                        </div>
 	                          <div class="form-group">
 	                              <label class="col-sm-2 col-sm-2 control-label">目录状态</label>
 	                              <div class="col-sm-10">

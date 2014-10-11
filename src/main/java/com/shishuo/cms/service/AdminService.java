@@ -171,7 +171,7 @@ public class AdminService {
 	 */
 	public PageVo<Admin> getAllListPage(int pageNum) {
 		PageVo<Admin> pageVo = new PageVo<Admin>(pageNum);
-		pageVo.setRows(5);
+		pageVo.setRows(20);
 		List<Admin> list = this
 				.getAllList(pageVo.getOffset(), pageVo.getRows());
 		pageVo.setList(list);

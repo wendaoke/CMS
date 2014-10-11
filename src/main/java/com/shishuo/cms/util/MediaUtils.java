@@ -6,6 +6,7 @@
 
 package com.shishuo.cms.util;
 
+import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -15,7 +16,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import javax.imageio.ImageIO;
+
 import net.coobird.thumbnailator.Thumbnails;
+import net.coobird.thumbnailator.geometry.Positions;
 
 import org.springframework.web.multipart.MultipartFile;
 
@@ -121,30 +125,46 @@ public class MediaUtils {
 		SimpleDateFormat formater = new SimpleDateFormat("yyyy/MM/dd");
 		String path = "upload/" + formater.format(new Date()) + "/"
 				+ UUID.randomUUID().toString().replaceAll("-", "") + ".jpg";
+		String filePath = SystemConstant.SHISHUO_CMS_ROOT + "/" + path;
 		File file = new File(SystemConstant.SHISHUO_CMS_ROOT + "/" + path);
 		if (!file.getParentFile().exists()) {
 			file.getParentFile().mkdirs();
 		}
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-
+		// ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		if (width > 0 && height > 0) {
-			Thumbnails.of(multipartFile.getInputStream()).size(width, height)
-					.keepAspectRatio(false).outputFormat("jpg")
-					.toOutputStream(baos);
-		} else {
-			if (width > 0) {
-				Thumbnails.of(multipartFile.getInputStream()).width(width)
-						.keepAspectRatio(true).outputFormat("jpg")
-						.toOutputStream(baos);
+			BufferedImage bufferedImage = ImageIO.read(multipartFile
+					.getInputStream());
+			int imageWidth = bufferedImage.getWidth();
+			int imageHeitht = bufferedImage.getHeight();
+			BufferedImage image = null;
+			if (width / height < imageWidth / imageHeitht) {
+				image = Thumbnails.of(multipartFile.getInputStream())
+						.height(height).asBufferedImage();
+			} else {
+				image = Thumbnails.of(multipartFile.getInputStream())
+						.width(width).asBufferedImage();
 			}
-			if (height > 0) {
-				Thumbnails.of(multipartFile.getInputStream()).height(height)
-						.keepAspectRatio(true).outputFormat("jpg")
-						.toOutputStream(baos);
+			Thumbnails.of(image).sourceRegion(Positions.CENTER, width, height)
+					.size(width, height).outputFormat("jpg").toFile(filePath);
+
+		} else {
+			if (width == 0 && height == 0) {
+				multipartFile.transferTo(file);
+			} else {
+				if (width > 0) {
+					Thumbnails.of(multipartFile.getInputStream()).width(width)
+							.keepAspectRatio(true).outputFormat("jpg")
+							.toFile(filePath);
+				}
+				if (height > 0) {
+					Thumbnails.of(multipartFile.getInputStream())
+							.height(height).keepAspectRatio(true)
+							.outputFormat("jpg").toFile(filePath);
+				}
 			}
 		}
-		FileOutputStream fos = new FileOutputStream(file);
-		baos.writeTo(fos);
+		// FileOutputStream fos = new FileOutputStream(file);
+		// baos.writeTo(fos);
 		return path;
 	}
 
