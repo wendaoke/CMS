@@ -39,11 +39,13 @@
                           <label class="col-sm-2 col-sm-2 control-label">目录</label>
                           <div class="col-sm-10">
                               <select class="form-control" name="folderId" style="font-size:15px;width: 300px;">
-			                   		<#list folderAll as folder>
+                              		<#list folderAll as folder>
+			                   			<#if folder.owner == "yes">
 			                        	<option value="${folder.folderId}" <#if folder.folderId==article.folderId>selected</#if>>
 			                        	${folder.pathName}
 			                        	</option>
-			                        </#list>							
+			                        	</#if>
+			                        </#list>
 	                            </select>			
                           </div>
                         </div> 
@@ -91,13 +93,13 @@
                       </div>
 					</div>
 				</section>
-				<section class="panel">
+				<!-- section class="panel">
 					<header class="panel-heading"> 附件 </header>
 					<div class="panel-body">
 						<div id="attachment"></div>
 						<button id="file_upload"  class="btn btn-shadow btn-info" type="button"><i class="icon-cloud-upload"></i> 添加附件</button>
 					</div>
-				</section>					
+				</section -->					
 			</div>
 		</div>
 		</fieldset>

@@ -2,7 +2,10 @@
 <#assign submenu="update_message">
 <#include "/manage/head.ftl">
 <style type="text/css">
-
+.guesbook_size{
+    margin: 10px 0;
+    font-size: 18px;
+}
 </style>
 <!--main content start-->
 	<section id="main-content">
@@ -12,52 +15,54 @@
 			<div class="col-lg-12">
 			<section class="panel">
 				<header class="panel-heading">
- 					留言详细内容(<#if guestbook.status=="init">未回复
-                                 <#else>
-                                 	<select class="js_message_status" messageId="${guestbook.messageId}">
-													<option value="display" <#if guestbook.status=="display">selected</#if>>显示</option>
-													<option value="hidden" <#if guestbook.status=="hidden">selected</#if>>隐藏</option>
-												</select>
-                              </#if>)
+					${guestbook.title}
 				</header>
 				<div class="panel-body">
-					<section class="panel">
-						<header class="panel-heading"> 内容 </header>
-						<div class="panel-body">
-							${guestbook.content}
-						</div>
-					</section>
-					<#if guestbook.status=="init">
-					<section class="panel">
-						<header class="panel-heading"> 回复 </header>
-						<div class="panel-body">
-							<form id="reply_message_form" method="post"
+					<form id="reply_message_form" method="post"
 								class="form-horizontal tasi-form" autocomplete="off"
 								action="${BASE_PATH}/manage/guestbook/addReply.json">
-								<input type="hidden" name="messageId" value="${guestbook.messageId}">
-					        	<div class="form-group">
-						        	<textarea class="form-control" rows="8" placeholder="" style="width: 960px;" name="reply"></textarea>
-						        	<p class="help-block" style="color:#B94A48;"></p>
-						        	<div class="col-xs-9" style="margin-top:15px;">
-										<label class="radio-inline"> <input type="radio"
-											name="status" value="display" checked /> 显示
-										</label> <label class="radio-inline"> <input type="radio"
-											name="status" value="hidden" /> 隐藏
-										</label>
-										<label class="radio-inline"> <button class="btn btn-danger" type="submit">保存</button>	</label>
-									</div>
-					        	</div>
-			            	</form>
+						<div class="rows">
+							<div class="col-xs-6">
+								<p class="guesbook_size"><b>姓名&nbsp;:&nbsp;</b>${guestbook.name}
+							</div>
+							<div class="col-xs-6">
+								<p class="guesbook_size"><b>邮箱&nbsp;:&nbsp;</b>${guestbook.email}</p>
+							</div>	
 						</div>
-					</section>
-					<#else>
-					<section class="panel">
-						<header class="panel-heading"> 回复 </header>
-						<div class="panel-body">
-							${guestbook.reply}
+						<div class="rows">
+							<div class="col-xs-12">
+								<p class="guesbook_size"><b>标题&nbsp;:&nbsp;</b>${guestbook.title}</p>
+							</div>	
 						</div>
-					</section>
-					</#if>
+						<div class="rows">
+							<div class="col-xs-12">
+								<p class="guesbook_size" style="margin-top:25px;"><b>内容:</b></p>
+								<p style="font-size;16px;">&nbsp;&nbsp;&nbsp;&nbsp;${guestbook.content}</p>
+							</div>	
+						</div>
+						<input type="hidden" name="guestbookId" value="${guestbook.guestbookId}">
+						<div class="rows">
+							<div class="col-xs-12">
+								<p class="guesbook_size" style="margin-top:25px;"><b>回复</b></p>
+								<textarea style="width:930px;height:200px;" name="reply">${guestbook.reply}</textarea>								
+							</div>							
+						</div>
+						<div class="rows">
+							<div class="col-xs-12">
+								<p class="guesbook_size"><b>状态：</b>
+									<input type="radio"
+												name="status" value="hidden" <#if guestbook.status =="hidden"> checked </#if>/> 隐藏	
+									<input type="radio"
+												name="status" value="display" <#if guestbook.status !="hidden"> checked </#if> /> 显示
+								</p>						
+							</div>							
+						</div>
+						<div class="rows">
+							<div class="col-xs-12">
+								<button type="submit" class="btn btn-shadow btn-primary">发布</button>						
+							</div>							
+						</div>
+					</form>
 				</div>
 			</section>
 		</div>
@@ -67,23 +72,27 @@
 	</section>
  <!--main content end-->
 <script type="text/javascript">
-var messageId=${guestbook.messageId};
+var guestbookId=${guestbook.guestbookId};
 	$(function(){
 		$('#reply_message_form').ajaxForm(function(data){
 			showErrors($('#add_message_form'),data.errors);
 			if(data.result){
 				bootbox.alert("保存成功",
 			   		function() {
-                    	window.location.href = "${BASE_PATH}/manage/guestbook/details.htm?messageId=" + messageId;
+                    	window.location.href = "${BASE_PATH}/manage/guestbook/list.htm";
                     	$('#reply_message_form').clearForm();
                 	});
 			}else{
-				$(".help-block").html(data.msg);
+				bootbox.alert("保存失败！"+data.msg,
+			   		function() {
+                    	$('#reply_message_form').clearForm();
+                    	window.location.href = "${BASE_PATH}/manage/guestbook/details.htm?guestbookId=" + guestbookId;
+                	});
 			}
 		});	
 		
 		$(".js_message_status").change(function(){
-		$.post("${BASE_PATH}/manage/guestbook/status.json", {"messageId": $(this).attr("messageId"),status:$(this).val()},function(){
+		$.post("${BASE_PATH}/manage/guestbook/status.json", {"guestbookId": $(this).attr("guestbookId"),status:$(this).val()},function(){
 			window.location.reload();
         },"json");  	
     });

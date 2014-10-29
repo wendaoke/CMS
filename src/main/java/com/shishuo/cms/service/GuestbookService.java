@@ -19,24 +19,30 @@ public class GuestbookService {
 	@Autowired
 	private GuestbookDao guestbookDao;
 
-	public Guestbook addGuestbook(String content) {
+	public Guestbook addGuestbook(String name, String email, String title,
+			String content) {
 		Guestbook guestbook = new Guestbook();
+		guestbook.setName(name);
+		guestbook.setEmail(email);
+		guestbook.setTitle(title);
 		guestbook.setContent(content);
 		guestbook.setReply("");
 		guestbook.setStatus(GuestbookConstant.status.init);
 		guestbook.setCreateTime(new Date());
+		guestbook.setReplyTime(guestbook.getCreateTime());
 		guestbookDao.addGuestbook(guestbook);
 		return guestbook;
 	}
 
 	public int updateReplyByMessageId(String reply, long messageId,
 			GuestbookConstant.status status) {
-		return guestbookDao.updateReplyByMessageId(reply, messageId, status);
+		return guestbookDao.updateReplyById(reply, messageId, status,
+				new Date());
 	}
 
 	public int updateStatusByMessageId(GuestbookConstant.status status,
 			long messageId) {
-		return guestbookDao.updateStatusByMessageId(status, messageId);
+		return guestbookDao.updateStatusById(status, messageId);
 	}
 
 	public GuestbookVo getGuestbookById(long messageId) {

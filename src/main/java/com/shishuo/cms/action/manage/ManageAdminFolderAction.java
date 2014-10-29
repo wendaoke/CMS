@@ -59,7 +59,6 @@ public class ManageAdminFolderAction extends ManageBaseAction {
 		AdminFolderVo adminFolder = adminFolderService.getAdminFolderById(
 				adminId, folderId);
 		if (adminFolder == null) {
-
 			adminFolderService.addAdminFolder(adminId, folderId);
 			json.setResult(true);
 		} else {

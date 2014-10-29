@@ -36,7 +36,6 @@
 </style>
 	<!--main content start-->
 	<section id="main-content">
-		
 		<section class="wrapper">
         	<!-- page start-->
             <section class="panel">
@@ -66,6 +65,7 @@
                                 	<tr>
 										<th>文章名称</th>
 										<th>状态</th>
+										<th>审核</th>
                 						<th>所属目录</th>
                 						<th>最后更新时间</th>
                 						<th>操作</th>
@@ -84,12 +84,19 @@
                                     			<span style="color:red;">隐藏</span>
                                     		</#if>
                							</td>
+               							<td>
+                                			<select class="js_article_check" articleId="${e.articleId}">
+                                				<option value="init" <#if e.check=="init">selected</#if>>未审核</option>
+												<option value="yes" <#if e.check=="yes">selected</#if>>已审核</option>
+												<option value="no" <#if e.check=="no">selected</#if>>审核失败</option>
+											</select>
+               							</td>
                             			<td>
                             				<a href="${BASE_PATH}/manage/article/list.htm?folderId=${e.folder.folderId}&status=${e.status}">
                             					${e.folder.name}
-                            				<a>
+                            				</a>
                             			</td>
-                                    	<td>${e.createTime?string("yyyy-MM-dd HH:mm:ss")}</td>
+                                    	<td>${e.createTime?string("yyyy-MM-dd")}</td>
                                     	<td>
                   							<!-- Icons -->
                   							<a href="${BASE_PATH}/manage/article/update.htm?articleId=${e.articleId}" title="修改">
@@ -117,6 +124,7 @@
 		<!--main content end-->
 <script>
 $(function(){
+var pageNum = "${p}";
 	$('.js_article_delete').click(function(){
 		var articleId = $(this).attr('articleId');
 		var status= "trash";
@@ -142,7 +150,21 @@ $(function(){
 				}
 			}
 		});					
-	});			
+	});	
+	$(".js_article_check").change(function(){
+		$.post("${BASE_PATH}/manage/article/check.json", 
+			{"articleId": $(this).attr("articleId"),check:$(this).val()},
+			function(data){
+				if(data.result){
+					window.location.href="${BASE_PATH}/manage/article/list.htm?p="+pageNum;
+				}else{
+					bootbox.alert(data.msg,
+	                function() {
+	                    window.location.href="${BASE_PATH}/manage/article/list.htm?p="+pageNum;
+	                });
+				}
+        },"json");  	
+    });		
 });
 </script>
 <#include "/manage/foot.ftl">

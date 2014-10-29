@@ -12,13 +12,13 @@ public class ArticleVo extends Article {
 	private Folder folder;
 
 	private List<FolderVo> folderPathList;
-	
+
 	private String pictureUrl;
-	
+
 	public String getPictureUrl() {
-		if(StringUtils.isBlank(this.getPicture())){
+		if (StringUtils.isBlank(this.getPicture())) {
 			return "upload/blank.jpg";
-		}else{
+		} else {
 			return this.getPicture();
 		}
 	}
@@ -37,17 +37,5 @@ public class ArticleVo extends Article {
 
 	public void setFolderPathList(List<FolderVo> folderPathList) {
 		this.folderPathList = folderPathList;
-	}
-
-	public long getFolderId() {
-		if (this.getFourthFolderId() != 0) {
-			return this.getFourthFolderId();
-		} else if (this.getThirdFolderId() != 0) {
-			return this.getThirdFolderId();
-		} else if (this.getSecondFolderId() != 0) {
-			return this.getSecondFolderId();
-		} else {
-			return this.getFirstFolderId();
-		}
 	}
 }

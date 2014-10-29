@@ -36,9 +36,9 @@ public class FolderAction extends BaseAction {
 			ModelMap modelMap) {
 		try {
 			Folder folder = folderService.getFolderById(folderId);
-			modelMap.addAttribute("folder", folder);
-			modelMap.addAttribute("g_folderId", folder.getFolderId());
-			modelMap.addAttribute("p", p);
+			modelMap.put("folder", folder);
+			modelMap.put("g_folderId", folder.getFolderId());
+			modelMap.put("p", p);
 			return themeService.getFolderTemplate(folder.getFolderId());
 		} catch (Exception e) {
 			modelMap.addAttribute("g_folderId", 0);

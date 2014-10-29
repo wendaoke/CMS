@@ -1,5 +1,6 @@
 package com.shishuo.cms.dao;
 
+import java.util.Date;
 import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
@@ -14,11 +15,12 @@ public interface GuestbookDao {
 
 	public int addGuestbook(Guestbook guestbook);
 
-	public int updateReplyByMessageId(@Param("reply") String reply,
-			@Param("messageId") long messageId,
-			@Param("status") GuestbookConstant.status status);
+	public int updateReplyById(@Param("reply") String reply,
+			@Param("guestbookId") long guestbookId,
+			@Param("status") GuestbookConstant.status status,
+			@Param("replyTime") Date replyTime);
 
-	public GuestbookVo getGuestbookById(@Param("messageId") long messageId);
+	public GuestbookVo getGuestbookById(@Param("guestbookId") long guestbookId);
 
 	public List<GuestbookVo> getGuestbookList(
 			@Param("status") GuestbookConstant.status status,
@@ -27,7 +29,7 @@ public interface GuestbookDao {
 	public int getGuestbookCountList(
 			@Param("status") GuestbookConstant.status status);
 
-	public int updateStatusByMessageId(
+	public int updateStatusById(
 			@Param("status") GuestbookConstant.status status,
-			@Param("messageId") long messageId);
+			@Param("guestbookId") long guestbookId);
 }

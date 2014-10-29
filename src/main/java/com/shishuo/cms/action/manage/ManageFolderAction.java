@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.shishuo.cms.constant.FolderConstant;
 import com.shishuo.cms.constant.MediaConstant;
+import com.shishuo.cms.entity.Admin;
 import com.shishuo.cms.entity.Folder;
 import com.shishuo.cms.entity.Media;
 import com.shishuo.cms.entity.vo.FolderVo;
@@ -44,8 +45,11 @@ public class ManageFolderAction extends ManageBaseAction {
 	 * 
 	 */
 	@RequestMapping(value = "/add.htm", method = RequestMethod.GET)
-	public String login(ModelMap modelMap) throws Exception {
-		modelMap.put("folderAll", folderService.getAllFolderList(0));
+	public String add(ModelMap modelMap, HttpServletRequest request)
+			throws Exception {
+		Admin admin = this.getAdmin(request);
+		modelMap.put("folderAll",
+				folderService.getAllFolderList(admin.getAdminId()));
 		modelMap.put("folderName", "");
 		modelMap.put("folderEname", "");
 		return "manage/folder/add";
@@ -62,9 +66,12 @@ public class ManageFolderAction extends ManageBaseAction {
 			@RequestParam(value = "folderName") String folderName,
 			@RequestParam(value = "folderEname") String folderEname,
 			@RequestParam(value = "status") FolderConstant.status status,
+			@RequestParam(value = "check") FolderConstant.check check,
 			ModelMap modelMap) {
 		JsonVo<String> json = new JsonVo<String>();
 		try {
+			folderName.trim();
+			folderEname.trim();
 			if (StringUtils.isBlank(folderName)) {
 				json.getErrors().put("folderName", "目录名称不能为空");
 			}
@@ -78,7 +85,7 @@ public class ManageFolderAction extends ManageBaseAction {
 			// 检测校验结果
 			validate(json);
 			folderService.addFolder(fatherId, folderName,
-					folderEname.toLowerCase(), status);
+					folderEname.toLowerCase(), status, check);
 			json.setResult(true);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
@@ -96,7 +103,8 @@ public class ManageFolderAction extends ManageBaseAction {
 	@RequestMapping(value = "/list.htm", method = RequestMethod.GET)
 	public String list(
 			@RequestParam(value = "folderId", defaultValue = "0") long folderId,
-			ModelMap modelMap) throws FolderNotFoundException {
+			ModelMap modelMap, HttpServletRequest request)
+			throws FolderNotFoundException {
 		List<FolderVo> pathList = folderService
 				.getFolderPathListByFolderId(folderId);
 		Folder folder = new Folder();
@@ -106,6 +114,7 @@ public class ManageFolderAction extends ManageBaseAction {
 		} else {
 			folder = folderService.getFolderById(folderId);
 		}
+		Admin admin = this.getAdmin(request);
 		List<FolderVo> folderList = folderService.getFolderListByFatherId(
 				folderId, null);
 		modelMap.put("folder", folder);
@@ -113,7 +122,8 @@ public class ManageFolderAction extends ManageBaseAction {
 		modelMap.put("pathList", pathList);
 		modelMap.put("folderName", "");
 		modelMap.put("folderEname", "");
-		modelMap.put("folderAll", folderService.getAllFolderList(0));
+		modelMap.put("folderAll",
+				folderService.getAllFolderList(admin.getAdminId()));
 		return "manage/folder/list";
 	}
 
@@ -148,36 +158,6 @@ public class ManageFolderAction extends ManageBaseAction {
 	}
 
 	/**
-	 * @author 进入修改目录资料页面
-	 * @throws Exception
-	 * 
-	 */
-	@RequestMapping(value = "/photo.htm", method = RequestMethod.GET)
-	public String photo(@RequestParam("folderId") long folderId,
-			@RequestParam(value = "p", defaultValue = "1") int p,
-			ModelMap modelMap, HttpServletRequest request) throws Exception {
-		Folder folder = folderService.getFolderById(folderId);
-		if (folder.getContent() == null) {
-			folder.setContent("");
-		}
-		if (folder.getFatherId() == 0) {
-			modelMap.put("fatherFolderName", "未分类");
-		} else {
-			Folder fatherFolder = folderService.getFolderById(folder
-					.getFatherId());
-			modelMap.put("fatherFolderName", fatherFolder.getName());
-		}
-		PageVo<Media> pageVo = attachmentService.getMediaPageByKindId(folderId,
-				MediaConstant.Kind.folder, 12, p);
-		pageVo.getArgs().put("folderId", folderId + "");
-		modelMap.put("folder", folder);
-		modelMap.put("folderAll", folderService.getAllFolderList(0));
-		modelMap.put("JSESSIONID", request.getSession().getId());
-		modelMap.put("attachmentPage", pageVo);
-		return "manage/folder/photo";
-	}
-
-	/**
 	 * @author 修改目录资料
 	 * 
 	 */
@@ -191,7 +171,6 @@ public class ManageFolderAction extends ManageBaseAction {
 			@RequestParam(value = "ename") String ename,
 			@RequestParam(value = "status") FolderConstant.status status,
 			@RequestParam(value = "content", required = false) String content) {
-
 		JsonVo<String> json = new JsonVo<String>();
 		// FIXME 检查目录的ename不能用循环遍历检查
 		List<FolderVo> list = folderService.getAllFolderList(0);
@@ -210,13 +189,13 @@ public class ManageFolderAction extends ManageBaseAction {
 					}
 				}
 			}
-
 			// 检测校验结果
 			validate(json);
+			name.trim();
+			ename.trim();
 			ename = ename.toLowerCase();
 			folderService.updateFolderById(folderId, name, ename, status,
 					content, height, width);
-
 			json.setResult(true);
 		} catch (Exception e) {
 			json.setResult(false);
@@ -258,11 +237,8 @@ public class ManageFolderAction extends ManageBaseAction {
 		JsonVo<String> json = new JsonVo<String>();
 		List<FolderVo> folderList = folderService.getFolderListByFatherId(
 				folderId, null);
-		FolderVo folder = folderService.getFolderById(folderId);
 		if (folderList.size() == 0) {
-			int count = articleService.getArticleCountByFolderId(
-					folder.getFirstFolderId(), folder.getSecondFolderId(),
-					folder.getThirdFolderId(), folder.getFourthFolderId());
+			int count = articleService.getArticleCountByFolderId(folderId);
 			if (count != 0) {
 				json.setResult(false);
 				json.setMsg("此目录下还有文件,不能被删除。");

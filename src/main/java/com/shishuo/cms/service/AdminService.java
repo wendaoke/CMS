@@ -6,6 +6,7 @@
 
 package com.shishuo.cms.service;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 
@@ -15,13 +16,14 @@ import javax.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.shishuo.cms.constant.AdminConstant;
 import com.shishuo.cms.constant.SystemConstant;
 import com.shishuo.cms.dao.AdminDao;
 import com.shishuo.cms.entity.Admin;
+import com.shishuo.cms.entity.vo.AdminVo;
 import com.shishuo.cms.entity.vo.PageVo;
 import com.shishuo.cms.exception.AuthException;
 import com.shishuo.cms.util.AuthUtils;
+import com.shishuo.cms.util.PropertyUtils;
 
 /**
  * 管理员
@@ -47,15 +49,12 @@ public class AdminService {
 	 * @param password
 	 * @return Admin
 	 */
-	public Admin addAdmin(String email, String name, String password,
-			AdminConstant.Status status) throws AuthException {
-		email = email.toLowerCase();
+	public Admin addAdmin(String name, String password) throws AuthException {
+		Date now = new Date();
 		Admin admin = new Admin();
 		admin.setName(name);
-		admin.setEmail(email);
-		admin.setStatus(status);
-		admin.setCreateTime(new Date());
-		admin.setPassword(AuthUtils.getPassword(password, email));
+		admin.setPassword(AuthUtils.getPassword(password));
+		admin.setCreateTime(now);
 		adminDao.addAdmin(admin);
 		return admin;
 	}
@@ -80,7 +79,7 @@ public class AdminService {
 
 	/**
 	 * 修改管理员资料
-	 * 
+	 *
 	 * @param adminId
 	 * @param name
 	 * @param password
@@ -88,25 +87,11 @@ public class AdminService {
 	 * @return Admin
 	 * @throws AuthException
 	 */
-	public Admin updateAdmin(long adminId, String name, String password,
-			AdminConstant.Status status) throws AuthException {
-		Admin admin = this.getAdminById(adminId);
-		admin.setName(name);
-		if (password.equals("")) {
-			admin.setPassword(admin.getPassword());
-		} else {
-			admin.setPassword(AuthUtils.getPassword(password, admin.getEmail()));
-		}
-		admin.setStatus(status);
-		adminDao.updateAdmin(admin);
-		return admin;
-	}
 
-	public void updateAdminByAmdinId(long adminId, String name, String password)
+	public void updateAdminByAmdinId(long adminId, String password)
 			throws AuthException {
-		Admin admin = this.getAdminById(adminId);
-		String pwd = AuthUtils.getPassword(password, admin.getEmail());
-		adminDao.updateAdminByadminId(adminId, name, pwd);
+		String pwd = AuthUtils.getPassword(password);
+		adminDao.updateAdminByadminId(adminId, pwd);
 	}
 
 	// ///////////////////////////////
@@ -119,17 +104,23 @@ public class AdminService {
 	 * @param email
 	 * @param password
 	 * @param request
+	 * @throws IOException
 	 */
-	public void adminLogin(String email, String password,
-			HttpServletRequest request) throws AuthException {
-		Admin admin = adminDao.getAdminByEmail(email);
+	public void adminLogin(String name, String password,
+			HttpServletRequest request) throws AuthException, IOException {
+		AdminVo admin = adminDao.getAdminByName(name);
 		if (admin == null) {
 			throw new AuthException("邮箱或密码错误");
 		}
-		String loginPassword = AuthUtils.getPassword(password, email);
+		String loginPassword = AuthUtils.getPassword(password);
 		if (loginPassword.equals(admin.getPassword())) {
 			HttpSession session = request.getSession();
 			admin.setPassword("");
+			if (name.equals(PropertyUtils.getValue("shishuocms.admin"))) {
+				admin.setIsAdmin("yes");
+			} else {
+				admin.setIsAdmin("no");
+			}
 			session.setAttribute(SystemConstant.SESSION_ADMIN, admin);
 		} else {
 			throw new AuthException("邮箱或密码错误");
@@ -185,7 +176,7 @@ public class AdminService {
 	 * @param email
 	 * @return Admin
 	 */
-	public Admin getAdminByEmail(String email) {
-		return adminDao.getAdminByEmail(email);
+	public Admin getAdminByName(String email) {
+		return adminDao.getAdminByName(email);
 	}
 }

@@ -12,8 +12,8 @@
 	<!-- ############################## -->
 	<insert id="addArticle" parameterType="com.shishuo.cms.entity.Article">
 		insert into
-		article(firstFolderId,secondFolderId,thirdFolderId,fourthFolderId,adminId,title,summary,content,picture,status,createTime,updateTime)
-		values(#{firstFolderId},#{secondFolderId},#{thirdFolderId},#{fourthFolderId},#{adminId},#{title},#{summary},#{content},#{picture},#{status},#{createTime},#{updateTime})
+		article(folderId,path,adminId,title,summary,content,picture,status,`check`,createTime,updateTime)
+		values(#{folderId},#{path},#{adminId},#{title},#{summary},#{content},#{picture},#{status},#{check},#{createTime},#{updateTime})
 		<selectKey resultType="long" keyProperty="articleId">
 			SELECT
 			LAST_INSERT_ID()
@@ -40,10 +40,8 @@
 
 	<update id="updateArticle" parameterType="com.shishuo.cms.entity.Article">
 		UPDATE article SET
-		firstFolderId=#{firstFolderId},
-		secondFolderId=#{secondFolderId},
-		thirdFolderId=#{thirdFolderId},
-		fourthFolderId=#{fourthFolderId},
+		folderId=#{folderId},
+		path=#{path},
 		title=#{title},
 		summary=#{summary},
 		picture=#{picture},
@@ -64,6 +62,10 @@
 		update article set
 		commentCount = #{commentCount} where articleId = #{articleId}
 	</update>
+	
+	<update id="updateCheck">
+		update article set `check`=#{check} where articleId=#{articleId}
+	</update>
 
 	<!-- ############################## -->
 	<!-- ###### 查询 ###### -->
@@ -74,48 +76,39 @@
 		select * from article where articleId=#{articleId}
 	</select>
 
-	<select id="getArticleListByFoderIdAndStatus" resultType="com.shishuo.cms.entity.vo.ArticleVo">
+	<select id="getArticleListOfDisplayByPath" resultType="com.shishuo.cms.entity.vo.ArticleVo">
 		select *
 		from article
 		where
-		<if test="firstFolderId!=0">firstFolderId=#{firstFolderId}</if>
-		<if test="secondFolderId!=0"> and secondFolderId=#{secondFolderId}</if>
-		<if test="thirdFolderId!=0">and thirdFolderId=#{thirdFolderId}</if>
-		<if test="fourthFolderId!=0">and fourthFolderId=#{fourthFolderId}</if>
-		and status = #{status}
+		path like #{path}"%" and status = 'display' and `check` = 'yes'
 		order by
 		createTime desc limit #{offset},#{rows}
 	</select>
 
-	<select id="getArticleCountByFoderIdAndStatus" resultType="Integer">
+	<select id="getArticleCountOfDisplayByPath" resultType="Integer">
 		select
 		count(*)
 		from article
 		where
-		<if test="firstFolderId!=0">firstFolderId=#{firstFolderId}</if>
-		<if test="secondFolderId!=0">and secondFolderId=#{secondFolderId}</if>
-		<if test="thirdFolderId!=0">and thirdFolderId=#{thirdFolderId}</if>
-		<if test="fourthFolderId!=0">and fourthFolderId=#{fourthFolderId}</if>
-		and status = #{status}
+		path like #{path}"%" and status = 'display' and `check` = 'yes'
 	</select>
 
 	<select id="getArticleCountByFolderId" resultType="Integer">
 		select
 		count(*)
-		from article
-		<if test="firstFolderId!=0">where firstFolderId=#{firstFolderId}</if>
-		<if test="secondFolderId!=0">and secondFolderId=#{secondFolderId}</if>
-		<if test="thirdFolderId!=0">and thirdFolderId=#{thirdFolderId}</if>
-		<if test="fourthFolderId!=0"> and fourthFolderId=#{fourthFolderId}</if>
+		from article where folderId = #{folderId}
+	</select>
+	
+	<select id="getArticleCountByAdminIdAndPath" resultType="Integer">
+		select
+		count(*)
+		from article where path like #{path}"%" and folderId in (select folderId from admin_folder where adminId = #{adminId})
 	</select>
 
-	<select id="getArticleListByFolderId" resultType="com.shishuo.cms.entity.vo.ArticleVo">
+	<select id="getArticleListByAdminIdAndPath" resultType="com.shishuo.cms.entity.vo.ArticleVo">
 		select * from
 		article
-		<if test="firstFolderId!=0">where firstFolderId=#{firstFolderId}</if>
-		<if test="secondFolderId!=0">and secondFolderId=#{secondFolderId}</if>
-		<if test="thirdFolderId!=0">and thirdFolderId=#{thirdFolderId}</if>
-		<if test="fourthFolderId!=0"> and fourthFolderId=#{fourthFolderId}</if>
+		where path like #{path}"%" and folderId in (select folderId from admin_folder where adminId = #{adminId})
 		order by createTime
 		desc limit
 		#{offset},#{rows}

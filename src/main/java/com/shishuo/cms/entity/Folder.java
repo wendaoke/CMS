@@ -75,6 +75,11 @@ public class Folder {
 	private FolderConstant.status status;
 
 	/**
+	 * 审核
+	 */
+	private FolderConstant.check check;
+
+	/**
 	 * 创建时间
 	 */
 	private Date createTime;
@@ -159,6 +164,14 @@ public class Folder {
 		this.status = status;
 	}
 
+	public FolderConstant.check getCheck() {
+		return check;
+	}
+
+	public void setCheck(FolderConstant.check check) {
+		this.check = check;
+	}
+
 	public Date getCreateTime() {
 		return createTime;
 	}
@@ -166,7 +179,7 @@ public class Folder {
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
 	}
-	
+
 	public int getWidth() {
 		return width;
 	}

@@ -11,6 +11,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import com.shishuo.cms.entity.Admin;
+import com.shishuo.cms.entity.vo.AdminVo;
 
 /**
  * 管理员
@@ -59,16 +60,7 @@ public interface AdminDao {
 	 * @param password
 	 */
 	public void updateAdminByadminId(@Param("adminId") long adminId,
-			@Param("name") String name, @Param("password") String password);
-
-	/**
-	 * 修改管理员资料
-	 * 
-	 * @param Adin
-	 * @return Integer
-	 * 
-	 */
-	public int updateAdmin(Admin admin);
+			@Param("password") String password);
 
 	// ///////////////////////////////
 	// ///// 查詢 ////////
@@ -108,6 +100,6 @@ public interface AdminDao {
 	 * @return Admin
 	 * 
 	 */
-	public Admin getAdminByEmail(@Param("email") String email);
+	public AdminVo getAdminByName(@Param("name") String name);
 
 }

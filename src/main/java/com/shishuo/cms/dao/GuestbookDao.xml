@@ -13,9 +13,9 @@
 
 	<insert id="addGuestbook" parameterType="com.shishuo.cms.entity.Guestbook">
 		insert into
-		guestbook(content,reply,status,createTime)
-		value(#{content},#{reply},#{status},#{createTime})
-		<selectKey resultType="long" keyProperty="messageId">
+		guestbook(name,email,title,content,reply,status,createTime,replyTime)
+		value(#{name},#{email},#{title},#{content},#{reply},#{status},#{createTime},#{replyTime})
+		<selectKey resultType="long" keyProperty="guestbookId">
 			SELECT
 			LAST_INSERT_ID()
 		</selectKey>
@@ -30,14 +30,14 @@
 	<!-- ###### 修改 ###### -->
 	<!-- ############################## -->
 	
-	<update id="updateReplyByMessageId">
+	<update id="updateReplyById">
 		update guestbook set
-		reply=#{reply},status=#{status}
-		where messageId=#{messageId}
+		reply=#{reply},status=#{status},replyTime=#{replyTime}
+		where guestbookId=#{guestbookId}
 	</update>
 	
 	<update id="updateStatusByMessageId">
-		update guestbook set status=#{status} where messageId=#{messageId}
+		update guestbook set status=#{status} where guestbookId=#{guestbookId}
 	</update>
 	
 	<!-- ############################## -->
@@ -45,7 +45,7 @@
 	<!-- ############################## -->
 
 	<select id="getGuestbookById" resultType="com.shishuo.cms.entity.vo.GuestbookVo">
-		select * from guestbook where messageId=#{messageId}
+		select * from guestbook where guestbookId=#{guestbookId}
 	</select>
 	
 	<select id="getGuestbookList" resultType="com.shishuo.cms.entity.vo.GuestbookVo">

@@ -72,7 +72,6 @@
                           </tr>
                                 </thead>
                               <tbody role="alert" aria-live="polite" aria-relevant="all">
-                                  
                                   <#list folderAll as folder>
 					                 <tr class="gradeA odd" <#if folder.owner == "no">style="display:none;"</#if>>
                                       <td>${folder.pathName}</td>
@@ -104,9 +103,7 @@ $(function() {
 			dataType : 'json',
 			success : function(data) {
 				if (data.result) {
-					bootbox.alert("保存成功，将刷新页面", function() {
-						window.location.reload();
-					});
+					window.location.reload();
 				}else{
 					bootbox.alert(data.msg, function() {
 						window.location.reload();
@@ -130,10 +127,7 @@ $(function() {
                         },
                         function(data) {
                             if (data.result) {
-                                bootbox.alert("删除成功",
-                                function() {
-                                   window.location.reload();
-                                });
+                                window.location.reload();
                             } else {
                                 bootbox.alert(data.msg,
                                 function() {});

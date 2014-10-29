@@ -8,8 +8,6 @@ package com.shishuo.cms.entity;
 
 import java.util.Date;
 
-import com.shishuo.cms.constant.AdminConstant;
-
 /**
  * 管理员实体
  * 
@@ -25,11 +23,6 @@ public class Admin {
 	private long adminId;
 
 	/**
-	 * 邮箱地址
-	 */
-	private String email;
-
-	/**
 	 * 管理员名称
 	 */
 	private String name;
@@ -38,11 +31,6 @@ public class Admin {
 	 * 密码
 	 */
 	private String password;
-
-	/**
-	 * 状态
-	 */
-	private AdminConstant.Status status;
 
 	/**
 	 * 时间
@@ -72,29 +60,13 @@ public class Admin {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-
-	public AdminConstant.Status getStatus() {
-		return status;
-	}
-
-	public void setStatus(AdminConstant.Status status) {
-		this.status = status;
-	}
-
+	
 	public Date getCreateTime() {
 		return createTime;
 	}
 
 	public void setCreateTime(Date createTime) {
 		this.createTime = createTime;
-	}
-
-	public String getEmail() {
-		return email;
-	}
-
-	public void setEmail(String email) {
-		this.email = email;
 	}
 
 }

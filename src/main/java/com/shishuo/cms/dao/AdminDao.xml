@@ -13,8 +13,8 @@
 
 	<insert id="addAdmin" parameterType="com.shishuo.cms.entity.Admin">
 		insert into
-		admin(email,name,password,status,createTime)
-		value(#{email},#{name},#{password},#{status},#{createTime})
+		admin(name,password,createTime)
+		value(#{name},#{password},#{createTime})
 		<selectKey resultType="long" keyProperty="adminId">
 			SELECT
 			LAST_INSERT_ID()
@@ -34,14 +34,8 @@
 	<!-- ###### 修改 ###### -->
 	<!-- ############################## -->
 
-	<update id="updateAdmin" parameterType="com.shishuo.cms.entity.Admin">
-		update admin set
-		name=#{name},password=#{password},status=#{status},createTime=#{createTime}
-		where adminId=#{adminId}
-	</update>
-
 	<update id="updateAdminByadminId">
-		update admin set name=#{name},password=#{password}
+		update admin set password=#{password}
 		where adminId=#{adminId}
 	</update>
 	<!-- ############################## -->
@@ -63,9 +57,9 @@
 		select * from admin where adminId=#{adminId}
 	</select>
 
-	<select id="getAdminByEmail" resultType="com.shishuo.cms.entity.Admin">
+	<select id="getAdminByName" resultType="com.shishuo.cms.entity.vo.AdminVo">
 		select * from admin
-		where email=#{email}
+		where name=#{name}
 	</select>
 
 </mapper>  

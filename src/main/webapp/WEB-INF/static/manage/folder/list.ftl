@@ -38,46 +38,35 @@
                               <form id="addFolder_form" method="post" class="form-horizontal" autocomplete="off" action="${BASE_PATH}/manage/folder/add.json">
                               	<fieldset>
                                   <div class="form-group">
-                                      <label class="col-sm-2 col-sm-2 control-label">目录名称</label>
-                                      <div class="col-sm-10">
+                                      <label class="col-xs-3 control-label">目录名称</label>
+                                      <div class="col-xs-9">
                                           <input type="text" style="font-size:15px;width: 200px;" class="form-control" name="folderName"
                                           	placeholder="目录名称" id="folderName" >${folderName}
                                           </input>
                                       </div>
                                   </div>
                                   <div class="form-group">
-                                      <label class="col-sm-2 col-sm-2 control-label">英文名称</label>
-                                      <div class="col-sm-10">
-	                                      <input style="font-size:15px;width: 200px;" onkeyup="value=value.replace(/[\W]/g,'') " onbeforepaste="clipboardData.setData('text',clipboardData.getData('text').replace(/[^\d]/g,''))" 
-	                                       CLASS="form-control" NAME="folderEname" PLACEHOLDER="英文名称">
-	                                       <p class="help-block">注意:英文名称只能是数字或者英文字母或者是下划线组成</p>
+                                      <label class="col-xs-3 control-label">英文名称</label>
+                                      <div class="col-xs-9">
+	                                      <input style="font-size:15px;width: 200px;"  class="form-control" name="folderEname" placeholder="英文名称">
                                       </div>
                                   </div>
                                   <div class="form-group">
-                                      <label class="col-sm-2 col-sm-2 control-label">父级标签</label>
-                                      <div class="col-sm-10">
-										<select class="form-control input-lg m-bot15" style="font-size:15px;width: 200px;" name="fatherId">
-					                   		<#list folderAll as firstFolder>
-					                        	<option style="background-color:#DFF0D8;font-weight:bold;" value="${firstFolder.folderId}">
-					                        	├─┬─${firstFolder.name}
-					                        	</option>
-						                        	<#list firstFolder.folderList as secondFolder>
-						                        	<option style="background-color:#5BC0DE;color:#FFFFFF;" value="${secondFolder.folderId}">
-						                        	│&nbsp;&nbsp;&nbsp;└──${secondFolder.name}
-						                        	</option>
-														<#list secondFolder.folderList as thirdFolder>
-							                        	<option style="background-color:#FCF8E3;" value="${thirdFolder.folderId}">
-							                        	│&nbsp;&nbsp;&nbsp;│&nbsp;&nbsp;└──${thirdFolder.name}
-							                        	</option>
-							                        	</#list>			                        	
-						                        	</#list>
-					                        </#list>							
-			                            </select>                                        
+                                      <label class="col-xs-3 control-label">父级标签</label>
+                                      <div class="col-xs-9">
+				 	<select class="form-control input-lg m-bot15" style="font-size:15px;width: 200px;" name="fatherId">
+				 			<option value="0">根目录</option>
+			                   		<#list folderAll as folder>
+			                        	<#if folder.owner == "yes">
+				                        	<option value="${folder.folderId}">${folder.pathName}</option>
+			                        	</#if>
+			                        </#list>							
+	                           	 </select>                                        
                                       </div>
                                   </div>                                                                 
                                   <div class="form-group">
-                                      <label class="col-sm-2 col-sm-2 control-label">目录状态</label>
-                                      <div class="col-sm-10">
+                                      <label class="col-xs-3 control-label">目录状态</label>
+                                      <div class="col-xs-9">
                                       	<label class="radio-inline">
                                     		<input type="radio" name="status" value="display" checked/> 显示
                                   		</label>
@@ -87,7 +76,18 @@
                                       </div>
                                   </div>
                                   <div class="form-group">
-                                  	  <div class="col-lg-offset-2 col-lg-10">
+                                      <label class="col-xs-3 control-label">文章审核</label>
+                                      <div class="col-xs-9">
+                                      	<label class="radio-inline">
+                                    		<input type="radio" name="check" value="no" checked/> 不需要
+                                  		</label>
+                                  		<label class="radio-inline">
+                                    		<input type="radio" name="check" value="yes"/> 需要
+                                  		</label>
+                                      </div>
+                                  </div>
+                                  <div class="form-group">
+                                  	  <div class="col-lg-offset-3 col-xs-9">
                                       <button class="btn btn-danger" type="submit">保存</button>
                                       </div>
                                   </div>
@@ -108,8 +108,10 @@
 										<tr>
 											<th>顺序</th>
 											<th>名称</th>
+											<th>ID</th>
 											<th>英文名称</th>
 											<th>状态</th>
+											<th>审核</th>
 											<th>操作</th>
 										</tr>
 									</thead>
@@ -119,8 +121,10 @@
 											<td class="folderSort"><input type="text"
 												folderId="${folder.folderId}" value="${folder.sort}" name="sort"
 												class="js_folder_sort" style="width: 40px;"></td>
-											<td><a
+											<td>
+												<a
 												href="${BASE_PATH}/manage/folder/list.htm?folderId=${folder.folderId}">${folder.name}</a></td>
+											<td>${folder.folderId}</td>
 											<td>${folder.ename}</td>
 											<td>
 												<#if folder.status=="display">
@@ -130,11 +134,18 @@
 												</#if>
 											</td>
 											<td>
+												<#if folder.check=="no">
+													不需要
+												<#else>
+													需要
+												</#if>
+											</td>
+											<td>
 												<!-- Icons -->
-												<a href="${BASE_PATH}/manage/folder/list.htm?folderId=${folder.folderId}" title="修改">
+											<!--	<a href="${BASE_PATH}/manage/folder/list.htm?folderId=${folder.folderId}" title="修改">
 													子目录
 												</a>
-												 | 
+												 |  -->
 												<a href="${BASE_PATH}/manage/folder/update.htm?folderId=${folder.folderId}" title="修改">
 													修改
 												</a>
@@ -244,25 +255,8 @@ $(function() {
 			dataType : 'json',
 			success : function(data) {
 				if (data.result) {
-					bootbox.dialog({
-						message : "保存成功",
-						title : "提示",
-						buttons : {
-							add : {
-								label : "继续添加",
-								className : "btn-success",
-								callback : function() {
-									window.location.reload();
-								}
-							},
-							list : {
-								label : "查看文件夹列表",
-								className : "btn-primary",
-								callback : function() {
-									window.location.href="${BASE_PATH}/manage/folder/list.htm";
-								}
-							},
-						}
+					bootbox.alert("保存成功",function() {
+						window.location.reload();
 					});
 				}else{
 					showErrors($('#addFolder_form'),data.errors);

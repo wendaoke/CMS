@@ -8,8 +8,6 @@ package com.shishuo.cms.entity;
 
 import java.util.Date;
 
-import org.apache.commons.lang3.StringUtils;
-
 import com.shishuo.cms.constant.ArticleConstant;
 
 /**
@@ -29,22 +27,12 @@ public class Article {
 	/**
 	 * 所属目录的第一级Id
 	 */
-	private long firstFolderId;
-
+	private long folderId;
+	
 	/**
-	 * 所属目录的第二级Id
+	 * 
 	 */
-	private long secondFolderId;
-
-	/**
-	 * 所属目录的第三级Id
-	 */
-	private long thirdFolderId;
-
-	/**
-	 * 所属目录的第四级Id
-	 */
-	private long fourthFolderId;
+	private String path;
 
 	/**
 	 * 管理员Id
@@ -87,6 +75,11 @@ public class Article {
 	private ArticleConstant.Status status;
 
 	/**
+	 * 审核
+	 */
+	private ArticleConstant.check check;
+
+	/**
 	 * 创建时间
 	 */
 	private Date createTime;
@@ -96,14 +89,6 @@ public class Article {
 	 */
 	private Date updateTime;
 
-	public long getFourthFolderId() {
-		return fourthFolderId;
-	}
-
-	public void setFourthFolderId(long fourthFolderId) {
-		this.fourthFolderId = fourthFolderId;
-	}
-
 	public long getArticleId() {
 		return articleId;
 	}
@@ -112,28 +97,28 @@ public class Article {
 		this.articleId = articleId;
 	}
 
-	public long getFirstFolderId() {
-		return firstFolderId;
+	public long getFolderId() {
+		return folderId;
 	}
 
-	public void setFirstFolderId(long firstFolderId) {
-		this.firstFolderId = firstFolderId;
+	public void setFolderId(long folderId) {
+		this.folderId = folderId;
 	}
 
-	public long getSecondFolderId() {
-		return secondFolderId;
+	public String getPath() {
+		return path;
 	}
 
-	public void setSecondFolderId(long secondFolderId) {
-		this.secondFolderId = secondFolderId;
+	public void setPath(String path) {
+		this.path = path;
 	}
 
-	public long getThirdFolderId() {
-		return thirdFolderId;
+	public long getAdminId() {
+		return adminId;
 	}
 
-	public void setThirdFolderId(long thirdFolderId) {
-		this.thirdFolderId = thirdFolderId;
+	public void setAdminId(long adminId) {
+		this.adminId = adminId;
 	}
 
 	public String getTitle() {
@@ -160,28 +145,12 @@ public class Article {
 		this.content = content;
 	}
 
-	public ArticleConstant.Status getStatus() {
-		return status;
+	public String getPicture() {
+		return picture;
 	}
 
-	public void setStatus(ArticleConstant.Status status) {
-		this.status = status;
-	}
-
-	public Date getCreateTime() {
-		return createTime;
-	}
-
-	public void setCreateTime(Date createTime) {
-		this.createTime = createTime;
-	}
-
-	public long getAdminId() {
-		return adminId;
-	}
-
-	public void setAdminId(long adminId) {
-		this.adminId = adminId;
+	public void setPicture(String picture) {
+		this.picture = picture;
 	}
 
 	public int getViewCount() {
@@ -200,6 +169,30 @@ public class Article {
 		this.commentCount = commentCount;
 	}
 
+	public ArticleConstant.Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(ArticleConstant.Status status) {
+		this.status = status;
+	}
+
+	public ArticleConstant.check getCheck() {
+		return check;
+	}
+
+	public void setCheck(ArticleConstant.check check) {
+		this.check = check;
+	}
+
+	public Date getCreateTime() {
+		return createTime;
+	}
+
+	public void setCreateTime(Date createTime) {
+		this.createTime = createTime;
+	}
+
 	public Date getUpdateTime() {
 		return updateTime;
 	}
@@ -208,12 +201,5 @@ public class Article {
 		this.updateTime = updateTime;
 	}
 
-	public String getPicture() {
-		return picture;
-	}
-
-	public void setPicture(String picture) {
-		this.picture = picture;
-	}
-
+	
 }

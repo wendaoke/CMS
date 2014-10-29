@@ -35,19 +35,19 @@ public class ManageGuestbookAction extends ManageBaseAction {
 	}
 
 	@RequestMapping(value = "/details.htm", method = RequestMethod.GET)
-	public String details(@RequestParam("messageId") long messageId,
+	public String details(@RequestParam("guestbookId") long guestbookId,
 			ModelMap modelMap, HttpServletRequest request) throws Exception {
-		GuestbookVo guestbook = guestbookService.getGuestbookById(messageId);
+		GuestbookVo guestbook = guestbookService.getGuestbookById(guestbookId);
 		modelMap.put("guestbook", guestbook);
 		return "manage/guestbook/update";
 	}
 
 	@RequestMapping(value = "/examine.htm", method = RequestMethod.GET)
-	public String examine(@RequestParam("messageId") long messageId,
+	public String examine(@RequestParam("guestbookId") long guestbookId,
 			@RequestParam("status") GuestbookConstant.status status,
 			ModelMap modelMap, HttpServletRequest request) throws Exception {
-		guestbookService.updateStatusByMessageId(status, messageId);
-		GuestbookVo guestbook = guestbookService.getGuestbookById(messageId);
+		guestbookService.updateStatusByMessageId(status, guestbookId);
+		GuestbookVo guestbook = guestbookService.getGuestbookById(guestbookId);
 		modelMap.put("guestbook", guestbook);
 		return "manage/guestbook/update";
 	}
@@ -55,22 +55,21 @@ public class ManageGuestbookAction extends ManageBaseAction {
 	@ResponseBody
 	@RequestMapping(value = "/addReply.json", method = RequestMethod.POST)
 	public JsonVo<String> addReply(@RequestParam(value = "reply") String reply,
-			@RequestParam(value = "messageId") long messageId,
+			@RequestParam(value = "guestbookId") long guestbookId,
 			@RequestParam(value = "status") GuestbookConstant.status status,
 			ModelMap modelMap) {
 		JsonVo<String> json = new JsonVo<String>();
 		if (StringUtils.isBlank(reply)) {
 			json.getErrors().put("reply", "回复内容不能为空");
+			json.setMsg("回复内容不能为空");
 		}
 		try {
 			// 检测校验结果
 			json.check();
-			guestbookService.updateReplyByMessageId(reply, messageId, status);
+			guestbookService.updateReplyByMessageId(reply, guestbookId, status);
 			json.setResult(true);
 		} catch (Exception e) {
-			logger.error(e.getMessage(), e);
 			json.setResult(false);
-			json.setMsg("回复内容不能为空");
 		}
 		return json;
 	}
@@ -78,14 +77,14 @@ public class ManageGuestbookAction extends ManageBaseAction {
 	@ResponseBody
 	@RequestMapping(value = "/status.json", method = RequestMethod.POST)
 	public JsonVo<String> status(
-			@RequestParam(value = "messageId") long messageId,
+			@RequestParam(value = "guestbookId") long guestbookId,
 			@RequestParam(value = "status") GuestbookConstant.status status,
 			ModelMap modelMap) {
 		JsonVo<String> json = new JsonVo<String>();
 		try {
 			// 检测校验结果
 			json.check();
-			guestbookService.updateStatusByMessageId(status, messageId);
+			guestbookService.updateStatusByMessageId(status, guestbookId);
 			json.setResult(true);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);

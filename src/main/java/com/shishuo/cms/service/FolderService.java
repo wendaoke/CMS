@@ -61,7 +61,8 @@ public class FolderService {
 	@CacheEvict(value = "folder", allEntries = true)
 	@Transactional
 	public Folder addFolder(long fatherId, String name, String ename,
-			FolderConstant.status status) throws FolderNotFoundException {
+			FolderConstant.status status, FolderConstant.check check)
+			throws FolderNotFoundException {
 		Folder folder = new Folder();
 		folder.setFatherId(fatherId);
 		if (fatherId == 0) {
@@ -77,7 +78,7 @@ public class FolderService {
 		folder.setCount(0);
 		folder.setSort(1);
 		folder.setStatus(status);
-
+		folder.setCheck(check);
 		folder.setCreateTime(new Date());
 		folderDao.addFolder(folder);
 		if (fatherId == 0) {
@@ -189,12 +190,12 @@ public class FolderService {
 	 */
 	@Cacheable(value = "folder")
 	public List<FolderVo> getAllFolderList(long adminId) {
-		List<FolderVo> firstFolderList = folderDao.getAllFolderList();
+		List<FolderVo> folderList = folderDao.getAllFolderList();
 		HashMap<String, FolderVo> folderMap = new HashMap<String, FolderVo>();
-		for (FolderVo folder : firstFolderList) {
+		for (FolderVo folder : folderList) {
 			folderMap.put(folder.getFolderId() + "", folder);
 		}
-		for (FolderVo folder : firstFolderList) {
+		for (FolderVo folder : folderList) {
 			folderMap.put(folder.getFolderId() + "", folder);
 			AdminFolderVo adminFolder = adminFolderService.getAdminFolderById(
 					adminId, folder.getFolderId());
@@ -203,14 +204,11 @@ public class FolderService {
 			} else {
 				folder.setOwner("yes");
 			}
-			if(adminId==1){
-				folder.setOwner("yes");
-			}
 		}
-		for (FolderVo folder : firstFolderList) {
+		for (FolderVo folder : folderList) {
 			folder.setPathName(getPathName(folderMap, folder.getPath()));
 		}
-		return firstFolderList;
+		return folderList;
 	}
 
 	@Cacheable(value = "folder")

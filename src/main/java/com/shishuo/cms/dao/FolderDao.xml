@@ -13,8 +13,8 @@
 
 	<insert id="addFolder" parameterType="com.shishuo.cms.entity.Folder">
 		insert into
-		folder(fatherId,ename,name,content,path,level,sort,count,status,createTime)
-		value(#{fatherId},#{ename},#{name},#{content},#{path},#{level},#{sort},#{count},#{status},#{createTime})
+		folder(fatherId,ename,name,content,path,level,sort,count,status,`check`,createTime)
+		value(#{fatherId},#{ename},#{name},#{content},#{path},#{level},#{sort},#{count},#{status},#{check},#{createTime})
 		<selectKey resultType="long" keyProperty="folderId">
 			SELECT
 			LAST_INSERT_ID()
@@ -69,8 +69,7 @@
 	</select>
 
 	<select id="getAllFolderList" resultType="com.shishuo.cms.entity.vo.FolderVo">
-		select * from folder
-		where status = 'display' order by path,sort
+		select * from folder order by path,sort
 	</select>
 
 	<select id="getFolderByEname" resultType="com.shishuo.cms.entity.Folder">

@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.shishuo.cms.constant.ArticleConstant;
+import com.shishuo.cms.constant.FolderConstant;
 import com.shishuo.cms.constant.MediaConstant;
 import com.shishuo.cms.entity.Admin;
 import com.shishuo.cms.entity.Article;
@@ -65,15 +66,15 @@ public class ManageArticleAction extends ManageBaseAction {
 			@RequestParam(value = "folderId", defaultValue = "0") long folderId,
 			HttpServletRequest request, ModelMap modelMap)
 			throws FolderNotFoundException {
+		Admin admin = this.getAdmin(request);
 		List<FolderVo> pathList = folderService
 				.getFolderPathListByFolderId(folderId);
 		PageVo<ArticleVo> pageVo = articleService.getArticlePageByFolderId(
-				folderId, pageNum);
-
+				admin.getAdminId(), folderId, pageNum);
 		modelMap.put("pathList", pathList);
 		modelMap.put("folderId", folderId);
 		modelMap.put("pageVo", pageVo);
-
+		modelMap.put("p", pageNum);
 		return "manage/article/list";
 	}
 
@@ -87,9 +88,11 @@ public class ManageArticleAction extends ManageBaseAction {
 			@RequestParam(value = "articleId", defaultValue = "1") long articleId,
 			ModelMap modelMap, HttpServletRequest request,
 			HttpServletResponse response) throws Exception {
+		Admin admin = this.getAdmin(request);
 		ArticleVo article = articleService.getArticleById(articleId);
 		modelMap.put("article", article);
-		modelMap.put("folderAll", folderService.getAllFolderList(0));
+		modelMap.put("folderAll",
+				folderService.getAllFolderList(admin.getAdminId()));
 		modelMap.put("JSESSIONID", request.getSession().getId());
 		return "manage/article/update";
 	}
@@ -124,6 +127,7 @@ public class ManageArticleAction extends ManageBaseAction {
 		JsonVo<Article> json = new JsonVo<Article>();
 		Article article;
 		try {
+			title.trim();
 			article = articleService.updateFileByFileId(articleId, folderId,
 					this.getAdmin(request).getAdminId(), title, summary,
 					content, status, file, createTime);
@@ -158,6 +162,7 @@ public class ManageArticleAction extends ManageBaseAction {
 		JsonVo<Article> json = new JsonVo<Article>();
 		Article article;
 		try {
+			title.trim();
 			article = articleService.addArticle(folderId, this
 					.getAdmin(request).getAdminId(), title, summary, status,
 					content, file, createTime);
@@ -165,12 +170,10 @@ public class ManageArticleAction extends ManageBaseAction {
 			json.setResult(true);
 			return json;
 		} catch (FolderNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			json.setResult(false);
 			return json;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			json.setResult(false);
 			return json;
@@ -188,7 +191,6 @@ public class ManageArticleAction extends ManageBaseAction {
 			@RequestParam(value = "articleId") long articleId)
 			throws ArticleNotFoundException {
 		JsonVo<String> json = new JsonVo<String>();
-		Article file = articleService.getArticleById(articleId);
 		// 删除文件系统
 		articleService.deleteArticleById(articleId);
 		List<Media> attachmentList = attachmentService.getMediaPageByKindId(
@@ -198,6 +200,47 @@ public class ManageArticleAction extends ManageBaseAction {
 					attachment.getPath());
 		}
 		json.setResult(true);
+		return json;
+	}
+
+	/**
+	 * @author 修改文件审核状态
+	 * @throws ArticleNotFoundException
+	 * 
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/check.json", method = RequestMethod.POST)
+	public JsonVo<String> check(
+			@RequestParam(value = "articleId") long articleId,
+			@RequestParam(value = "check") ArticleConstant.check check,
+			HttpServletRequest request) throws ArticleNotFoundException {
+		JsonVo<String> json = new JsonVo<String>();
+		Admin admin = this.getAdmin(request);
+		if (admin.getAdminId() != 1) {
+			json.setResult(false);
+			json.setMsg("您不是超级管理员，无权该审核文件！");
+		} else {
+			try {
+				ArticleVo article = articleService.getArticleById(articleId);
+				FolderVo folder = folderService.getFolderById(article
+						.getFolderId());
+				if (folder.getCheck().equals(FolderConstant.check.yes)) {
+					if (check.equals(ArticleConstant.check.init)) {
+						json.setResult(false);
+						json.setMsg("该文件已审核，无法恢复至未审核状态！");
+					} else {
+						articleService.updateCheck(articleId, check);
+						json.setResult(true);
+					}
+				} else {
+					json.setResult(false);
+					json.setMsg("该文件无需审核！");
+				}
+			} catch (FolderNotFoundException e) {
+				json.setResult(false);
+				json.setMsg("找不到该文件所属目录！");
+			}
+		}
 		return json;
 	}
 }

@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -60,8 +59,7 @@ public class AdminAction extends BaseAction {
 
 	@ResponseBody
 	@RequestMapping(value = "/login.json", method = RequestMethod.POST)
-	public JsonVo<String> adminLogin(
-			@RequestParam(value = "email") String email,
+	public JsonVo<String> adminLogin(@RequestParam(value = "name") String name,
 			@RequestParam(value = "password") String password,
 			@RequestParam(value = "captcha") String captcha,
 			HttpServletRequest request, ModelMap modelMap) {
@@ -70,9 +68,6 @@ public class AdminAction extends BaseAction {
 		try {
 			String kaptcha = (String) request.getSession().getAttribute(
 					com.google.code.kaptcha.Constants.KAPTCHA_SESSION_KEY);
-			if (!EmailValidator.getInstance().isValid(email)) {
-				json.getErrors().put("email", "邮件格式错误");
-			}
 			if (StringUtils.isBlank(password)) {
 				json.getErrors().put("password", "密码不能为空");
 			} else if (password.length() < 6 && password.length() > 30) {
@@ -87,7 +82,7 @@ public class AdminAction extends BaseAction {
 			}
 			json.check();
 
-			adminService.adminLogin(email, password, request);
+			adminService.adminLogin(name, password, request);
 
 		} catch (Exception e) {
 			// 异常，重置验证码

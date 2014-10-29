@@ -11,7 +11,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
-import com.shishuo.cms.constant.ArticleConstant;
+import com.shishuo.cms.constant.ArticleConstant.check;
 import com.shishuo.cms.entity.Article;
 import com.shishuo.cms.entity.vo.ArticleVo;
 
@@ -79,6 +79,9 @@ public interface ArticleDao {
 	public int updateCommentCount(@Param("articleId") long articleId,
 			@Param("commentCount") int commentCount);
 
+	public int updateCheck(@Param("articleId") long articleId,
+			@Param("check") check check);
+
 	// ///////////////////////////////
 	// ///// 查詢 ////////
 	// ///////////////////////////////
@@ -97,12 +100,8 @@ public interface ArticleDao {
 	 * @param foderId
 	 * @return List<FileVo>
 	 */
-	public List<ArticleVo> getArticleListByFoderIdAndStatus(
-			@Param("firstFolderId") long firstFolderId,
-			@Param("secondFolderId") long secondFolderId,
-			@Param("thirdFolderId") long thirdFolderId,
-			@Param("fourthFolderId") long fourthFolderId,
-			@Param("status") ArticleConstant.Status status,
+	public List<ArticleVo> getArticleListOfDisplayByPath(
+			@Param("path") String path,
 			@Param("offset") long offset, @Param("rows") long rows);
 
 	/**
@@ -111,12 +110,7 @@ public interface ArticleDao {
 	 * @param foderId
 	 * @return Integer
 	 */
-	public int getArticleCountByFoderIdAndStatus(
-			@Param("firstFolderId") long firstFolderId,
-			@Param("secondFolderId") long secondFolderId,
-			@Param("thirdFolderId") long thirdFolderId,
-			@Param("fourthFolderId") long fourthFolderId,
-			@Param("status") ArticleConstant.Status status);
+	public int getArticleCountOfDisplayByPath(@Param("path") String path);
 
 	/**
 	 * 得到某种显示的文件的列表
@@ -124,11 +118,9 @@ public interface ArticleDao {
 	 * @param foderId
 	 * @return List<FileVo>
 	 */
-	public List<ArticleVo> getArticleListByFolderId(
-			@Param("firstFolderId") long firstFolderId,
-			@Param("secondFolderId") long secondFolderId,
-			@Param("thirdFolderId") long thirdFolderId,
-			@Param("fourthFolderId") long fourthFolderId,
+	public List<ArticleVo> getArticleListByAdminIdAndPath(
+			@Param("adminId") long adminId,
+			@Param("path") String path,
 			@Param("offset") long offset, @Param("rows") long rows);
 
 	/**
@@ -138,10 +130,14 @@ public interface ArticleDao {
 	 * @param fourthFolderId
 	 * @return
 	 */
-	public int getArticleCountByFolderId(
-			@Param("firstFolderId") long firstFolderId,
-			@Param("secondFolderId") long secondFolderId,
-			@Param("thirdFolderId") long thirdFolderId,
-			@Param("fourthFolderId") long fourthFolderId);
+	public int getArticleCountByAdminIdAndPath(@Param("adminId") long adminId,
+			@Param("path") String path);
+
+	/**
+	 * @param adminId
+	 * @param path
+	 * @return
+	 */
+	public int getArticleCountByFolderId(@Param("folderId") long folderId);
 
 }

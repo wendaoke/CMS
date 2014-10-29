@@ -7,7 +7,6 @@
 package com.shishuo.cms.util;
 
 import org.apache.commons.codec.digest.DigestUtils;
-import org.apache.commons.lang3.StringUtils;
 
 import com.shishuo.cms.constant.SystemConstant;
 import com.shishuo.cms.exception.AuthException;
@@ -24,19 +23,14 @@ public class AuthUtils {
 	 * 生产密文密码
 	 * 
 	 * @param password
-	 *            明文密码
+	 *                明文密码
 	 * @param email
-	 *            邮箱
+	 *                邮箱
 	 * @return
 	 * @throws AuthException
 	 */
-	public static String getPassword(String password, String email)
-			throws AuthException {
-		if (StringUtils.isBlank(password) || StringUtils.isBlank(email)
-				|| StringUtils.isBlank(email)) {
-			throw new AuthException("值不能为空");
-		}
-		return DigestUtils.md5Hex(password + email).toLowerCase();
+	public static String getPassword(String password) {
+		return DigestUtils.md5Hex(password).toLowerCase();
 	}
 
 	/**
@@ -52,6 +46,7 @@ public class AuthUtils {
 	 * @return
 	 */
 	public static String getFaceUrl(String email) {
-		return SystemConstant.FACE_URL + "/" + AuthUtils.MD5(email) + ".jpg";
+		return SystemConstant.FACE_URL + "/" + AuthUtils.MD5(email)
+				+ ".jpg";
 	}
 }
