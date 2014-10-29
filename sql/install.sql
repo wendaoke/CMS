@@ -129,7 +129,7 @@ CREATE TABLE `user` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 ROW_FORMAT=COMPACT COMMENT='用户';
 
 
-INSERT INTO `admin` VALUES (1,'shishuocms','6aa56f1dbd25f5725fb12d4f582aa06e','init','2012-08-08 00:00:00');
+INSERT INTO `admin` VALUES (1,'shishuocms','6aa56f1dbd25f5725fb12d4f582aa06e','2012-08-08 00:00:00');
 
 INSERT INTO `config` VALUES ('shishuo_headline_image_height','420','首页头图的高（px）','2012-08-08 00:00:00');
 INSERT INTO `config` VALUES ('shishuo_headline_image_width','858','首页头图的宽（px）','2012-08-08 00:00:00');
