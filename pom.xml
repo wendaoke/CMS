@@ -8,9 +8,9 @@
 	<groupId>com.shishuo</groupId>
 	<artifactId>shishuocms</artifactId>
 	<packaging>war</packaging>
-	<version>1.0.0</version>
+	<version>2.0.1</version>
 	<name>SHISHUO CMS (http://shishuo.com/cms)</name>
-	<url>http://cms.shishuo.com</url>
+	<url>http://shishuocms.aliapp.com</url>
 	<dependencies>
 		<dependency>
 			<groupId>junit</groupId>
