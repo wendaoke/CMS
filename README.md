@@ -1,11 +1,58 @@
 ## 欢迎使用 “师说CMS”
 
 > 使用Java语言开发的CMS（使用Apache2协议，可免费用于商业用途）<br>
-> Spring MVC为表现层，Spring为业务层，MyBatis为数据层。项目大量使用注解，代码注释清晰，文档齐全，是学习和二次开发的首选。<br>
-><br>
->QQ群：7343505
+QQ群：7343505 <a target="_blank" href="http://shang.qq.com/wpa/qunwpa?idkey=8330a17a4fdc8ee8dc65b546c27218aac74ba2ea6c34cf5fb75fffe31dc81be8"><img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="师说CMS技术交流" title="师说CMS技术交流"></a>
 
-## release 2.0.1
+## 部署环境前提
+* eclipse
+* jdk7
+* git
+* maven
+* tomcat
+* mysql
+
+## 部署开发环境
+1. 下载 [Eclipse IDE for Java EE Developers](http://eclipse.org/downloads/)
+2. 打开eclpse,导入师说CMS
+3. File -> Import -> Git -> Projects from Git -> Clone URI
+4. 然后在URI输入：https://git.oschina.net/shishuo/CMS.git
+5. 等待eclipse自动下载jar包
+6. 创建/sql/install.sql数据库
+7. 部署中可能还会碰到很多问题，请加入QQ群：7343505
+
+## 部署到线上（生产）
+1. 复制 /src/main/resources/shishuocms.properties 到 /
+2. 修改 shishuocms.properties 里的数据库链接、用户名和密码为生产环境的值
+3. mvn package
+4. 生成/dist文件夹，此文件夹为生产环境的编译目录
+
+## 师说CMS的功能
+
+### 首页头条
+* 滚动大图上传
+* 可设置链接、标题
+
+### 目录
+* 无层级限制
+* 目录拥有自己的内容
+* 可设置此目录的所有文章的封面
+* 可设置是否需要审核
+
+### 文章
+* 文章管理，整合百度UEditor，
+* 自动缩小和裁剪文章封面图片
+* 可定义文章发布时间
+* 可设置文章摘要
+
+### 管理员
+* 设置超级管理员
+* 增加管理员
+* 分配管理员拥有的目录权限
+* 修改密码
+
+### 其他
+* 使用标签，方便前端模板开发
+* 使用注解，方便二次开发
 
 
 ## 捐赠
@@ -13,6 +60,7 @@
 <a href='http://me.alipay.com/herbert'> <img src='https://img.alipay.com/sys/personalprod/style/mc/btn-index.png' /> </a>
 
 ## 演示地址
+[http://shishuocms.aliapp.com/](http://shishuocms.aliapp.com/)
 
 ## 技术关键词
 * jQuery
@@ -26,19 +74,6 @@
 * FreeMarker
 * Lucene
 
-## 前言
-
-师说CMS是由长沙师说网络科技有限公司开源的一款CMS产品，其公司推出的“师说" http://www.shishuo.com ，是一个专业人才交流平台，致力于解决人才与企业和人才与人才之间交流的平台。
-
-## 安装
-
-## 目标
-
- - 为致力于学习Java语言的初学者提供学习和参考的Demo 
- - 帮助企业以更低的成本打造自己的网站
- - 让广大Web前端开发者和设计者，专注前台页面设计和制作
- - 填补各种优秀的开源CMS系统中，使用Java语言开发的空白
-
 ## 需求
 
  - 文章列表模块
@@ -47,9 +82,6 @@
  - 电子商务模块
  - 用户注册登录模块
  - 后台管理模块
- 
-## 效果图
-
 
 ## 开发
 
