@@ -12,8 +12,8 @@
 	<!-- ############################## -->
 	<insert id="addArticle" parameterType="com.shishuo.cms.entity.Article">
 		insert into
-		article(folderId,path,adminId,title,summary,content,picture,status,`check`,createTime,updateTime)
-		values(#{folderId},#{path},#{adminId},#{title},#{summary},#{content},#{picture},#{status},#{check},#{createTime},#{updateTime})
+		article(folderId,path,adminId,title,summary,content,picture,status,login,`check`,createTime,updateTime)
+		values(#{folderId},#{path},#{adminId},#{title},#{summary},#{content},#{picture},#{status},#{login},#{check},#{createTime},#{updateTime})
 		<selectKey resultType="long" keyProperty="articleId">
 			SELECT
 			LAST_INSERT_ID()
@@ -47,6 +47,8 @@
 		picture=#{picture},
 		content=#{content},
 		status=#{status},
+		login=#{login},
+		`check`=#{check},
 		createTime=#{createTime},
 		updateTime=#{updateTime}
 		WHERE
@@ -102,13 +104,13 @@
 	<select id="getArticleCountByAdminIdAndPath" resultType="Integer">
 		select
 		count(*)
-		from article where path like #{path}"%" and folderId in (select folderId from admin_folder where adminId = #{adminId})
+		from article where path like #{path}"%" and folderId in (select folderId from admin_folder where adminId = #{adminId})<if test="check !=null">and `check` = #{check}</if>
 	</select>
 
 	<select id="getArticleListByAdminIdAndPath" resultType="com.shishuo.cms.entity.vo.ArticleVo">
 		select * from
 		article
-		where path like #{path}"%" and folderId in (select folderId from admin_folder where adminId = #{adminId})
+		where path like #{path}"%" and folderId in (select folderId from admin_folder where adminId = #{adminId}) <if test="check !=null">and `check` = #{check}</if>
 		order by createTime
 		desc limit
 		#{offset},#{rows}

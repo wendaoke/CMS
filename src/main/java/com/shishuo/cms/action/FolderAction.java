@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.shishuo.cms.entity.Folder;
+import com.shishuo.cms.entity.vo.FolderVo;
 
 /**
  * @author Herbert
@@ -31,13 +32,14 @@ public class FolderAction extends BaseAction {
 	 * @return
 	 */
 	@RequestMapping(value = "/{folderId}.htm", method = RequestMethod.GET)
-	public String fourthFolder(@PathVariable long folderId,
+	public String folder(@PathVariable long folderId,
 			@RequestParam(value = "p", defaultValue = "1") long p,
 			ModelMap modelMap) {
 		try {
 			Folder folder = folderService.getFolderById(folderId);
 			modelMap.put("folder", folder);
-			modelMap.put("g_folderId", folder.getFolderId());
+			FolderVo fatherFolder = folderService.getFolderById(folderService.firstFolderId(folderId));
+			modelMap.put("g_folderId", fatherFolder.getFolderId());
 			modelMap.put("p", p);
 			return themeService.getFolderTemplate(folder.getFolderId());
 		} catch (Exception e) {

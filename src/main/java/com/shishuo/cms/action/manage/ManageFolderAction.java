@@ -30,6 +30,7 @@ import com.shishuo.cms.entity.vo.JsonVo;
 import com.shishuo.cms.entity.vo.PageVo;
 import com.shishuo.cms.exception.FolderNotFoundException;
 import com.shishuo.cms.util.RegexUtils;
+import com.shishuo.cms.util.SSUtils;
 
 /**
  * @author 目录action
@@ -70,8 +71,6 @@ public class ManageFolderAction extends ManageBaseAction {
 			ModelMap modelMap) {
 		JsonVo<String> json = new JsonVo<String>();
 		try {
-			folderName.trim();
-			folderEname.trim();
 			if (StringUtils.isBlank(folderName)) {
 				json.getErrors().put("folderName", "目录名称不能为空");
 			}
@@ -84,8 +83,10 @@ public class ManageFolderAction extends ManageBaseAction {
 			}
 			// 检测校验结果
 			validate(json);
-			folderService.addFolder(fatherId, folderName,
-					folderEname.toLowerCase(), status, check);
+			folderService.addFolder(fatherId,
+					SSUtils.toText(folderName.trim()),
+					SSUtils.toText(folderEname.toLowerCase().trim()), status,
+					check);
 			json.setResult(true);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);
@@ -191,10 +192,9 @@ public class ManageFolderAction extends ManageBaseAction {
 			}
 			// 检测校验结果
 			validate(json);
-			name.trim();
-			ename.trim();
-			ename = ename.toLowerCase();
-			folderService.updateFolderById(folderId, name, ename, status,
+			folderService.updateFolderById(folderId,
+					SSUtils.toText(name.trim()),
+					SSUtils.toText(ename.trim().toLowerCase()), status,
 					content, height, width);
 			json.setResult(true);
 		} catch (Exception e) {

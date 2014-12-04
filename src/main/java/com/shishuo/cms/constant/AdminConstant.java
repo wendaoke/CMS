@@ -13,5 +13,5 @@ package com.shishuo.cms.constant;
  * 
  */
 public class AdminConstant {
-	
+
 }

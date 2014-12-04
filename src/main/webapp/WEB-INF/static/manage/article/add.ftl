@@ -68,8 +68,8 @@
                         <div class="form-group">
                           <label class="col-sm-2 col-sm-2 control-label">发布时间</label>
                           <div class="col-sm-10">
-                              <input type="text" data-link-format="yyyy-mm-dd" data-date-format="yyyy-MM-dd" style="font-size:15px;" class="js_create_time" name="createTime"
-                              	placeholder="发布时间" id="createTime" value="${.now?string("yyyy-MM-dd")}" readonly>
+                              <input type="text" data-link-format="yyyy-MM-dd" data-date-format="yyyy-MM-dd" style="font-size:15px;width: 200px;" class="js_create_time" name="createTime"
+                              	placeholder="发布时间" id="createTime" value="${.now?string("yyyy-MM-dd")}">
                               </input>
                           </div>
                         </div> 
@@ -82,13 +82,20 @@
                           </div>
                         </div>
                         <div class="form-group">
+                          <label class="col-sm-2 col-sm-2 control-label">是否需要登录</label>
+                          <div class="col-sm-10" style="margin-bottom:10px;">
+                          	<input name="login" value="no" type="radio" checked> 不需要登录
+								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+								<input name="login" value="yes" type="radio"> 需要登录
+                          </div>
+                        </div>
+                        <div class="form-group">
                       	  <div class="col-lg-offset-2 col-lg-10">
                           <button class="btn btn-shadow btn-primary" type="submit">发布</button>
                           </div>
                       </div>
 					</div>
 				</section>
-				
 			</div>
 		</div>
 		</form>
@@ -104,14 +111,14 @@ $(function(){
 			if (data.result) {
 				bootbox.alert("保存成功，将刷新页面", function() {
 					window.location.reload();
-					
 				});
 			}else{
 				showErrors($('#add_article_form'),data.errors);
 			}
 		}
 	});
-	$('.js_create_time').datetimepicker({
+    
+    $('.js_create_time').datetimepicker({
         language:  'zh-CN',
         format: "yyyy-mm-dd",
         weekStart: 1,

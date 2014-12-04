@@ -49,7 +49,8 @@ public class AdminService {
 	 * @param password
 	 * @return Admin
 	 */
-	public Admin addAdmin(String name, String password) throws AuthException {
+	public Admin addAdmin(String name, String password)
+			throws AuthException {
 		Date now = new Date();
 		Admin admin = new Admin();
 		admin.setName(name);
@@ -79,7 +80,7 @@ public class AdminService {
 
 	/**
 	 * 修改管理员资料
-	 *
+	 * 
 	 * @param adminId
 	 * @param name
 	 * @param password
@@ -107,7 +108,8 @@ public class AdminService {
 	 * @throws IOException
 	 */
 	public void adminLogin(String name, String password,
-			HttpServletRequest request) throws AuthException, IOException {
+			HttpServletRequest request) throws AuthException,
+			IOException {
 		AdminVo admin = adminDao.getAdminByName(name);
 		if (admin == null) {
 			throw new AuthException("邮箱或密码错误");
@@ -116,12 +118,14 @@ public class AdminService {
 		if (loginPassword.equals(admin.getPassword())) {
 			HttpSession session = request.getSession();
 			admin.setPassword("");
-			if (name.equals(PropertyUtils.getValue("shishuocms.admin"))) {
-				admin.setIsAdmin("yes");
+			if (name.equals(PropertyUtils
+					.getValue("shishuocms.admin"))) {
+				admin.setAdmin(true);
 			} else {
-				admin.setIsAdmin("no");
+				admin.setAdmin(false);
 			}
-			session.setAttribute(SystemConstant.SESSION_ADMIN, admin);
+			session.setAttribute(SystemConstant.SESSION_ADMIN,
+					admin);
 		} else {
 			throw new AuthException("邮箱或密码错误");
 		}
@@ -163,8 +167,8 @@ public class AdminService {
 	public PageVo<Admin> getAllListPage(int pageNum) {
 		PageVo<Admin> pageVo = new PageVo<Admin>(pageNum);
 		pageVo.setRows(20);
-		List<Admin> list = this
-				.getAllList(pageVo.getOffset(), pageVo.getRows());
+		List<Admin> list = this.getAllList(pageVo.getOffset(),
+				pageVo.getRows());
 		pageVo.setList(list);
 		pageVo.setCount(this.getAllListCount());
 		return pageVo;
@@ -176,7 +180,13 @@ public class AdminService {
 	 * @param email
 	 * @return Admin
 	 */
-	public Admin getAdminByName(String email) {
-		return adminDao.getAdminByName(email);
+	public Admin getAdminByName(String name) {
+		return adminDao.getAdminByName(name);
+	}
+
+	public long getSuperAdminId() {
+		Admin admin = getAdminByName(PropertyUtils
+				.getValue("shishuocms.admin"));
+		return admin.getAdminId();
 	}
 }

@@ -164,9 +164,10 @@ public class TemplateService {
 				+ "/" + theme + ".ftl";
 		File file = new File(SystemConstant.SHISHUO_CMS_ROOT + themePath);
 		if (file.exists()) {
+			logger.info("尝试使用模板：" + themePath+"【存在】");
 			return true;
 		} else {
-			logger.info("模板不存在：" + file.getAbsolutePath());
+			logger.info("尝试使用模板：" + themePath+"【不存在】");
 			return false;
 		}
 	}

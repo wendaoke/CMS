@@ -15,7 +15,6 @@ import org.springframework.stereotype.Service;
 import com.shishuo.cms.plugin.TagPlugin;
 import com.shishuo.cms.service.FolderService;
 import com.shishuo.cms.util.HttpUtils;
-import com.shishuo.cms.util.PropertyUtils;
 
 import freemarker.core.Environment;
 import freemarker.template.TemplateDirectiveBody;
@@ -33,16 +32,12 @@ public class ArticleUrlTag extends TagPlugin {
 	@Autowired
 	private FolderService folderService;
 
-	public void execute(Environment env, Map params, TemplateModel[] loopVars,
-			TemplateDirectiveBody body) throws TemplateException, IOException {
+	public void execute(Environment env, Map params,
+			TemplateModel[] loopVars, TemplateDirectiveBody body)
+			throws TemplateException, IOException {
 		String artcleId = params.get("articleId").toString();
 		String basePath = HttpUtils.getBasePath(request);
-		if (Boolean.getBoolean(PropertyUtils.getValue("shishuo.static"))) {
-			env.getOut()
-					.write(basePath + "/html/article/" + artcleId + ".html");
-		} else {
-			env.getOut().write(basePath + "/article/" + artcleId + ".htm");
-		}
+		env.getOut().write(basePath + "/article/" + artcleId + ".htm");
 	}
 
 }

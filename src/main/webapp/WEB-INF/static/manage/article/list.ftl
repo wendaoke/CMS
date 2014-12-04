@@ -37,26 +37,46 @@
 	<!--main content start-->
 	<section id="main-content">
 		<section class="wrapper">
+		<#if SESSION_ADMIN.isAdmin>
+			<div class="row">
+	                  <div class="col-lg-12">
+	                      <!--breadcrumbs start -->
+	                      <ul class="breadcrumb">
+					<li>
+						<a href="${BASE_PATH}/manage/article/list.htm">全部文章(${allCount})</a>
+					</li>
+					<li>
+						<a href="${BASE_PATH}/manage/article/list.htm?check=init">未审核(${initCount})</a>
+					</li>
+					<li>
+						<a href="${BASE_PATH}/manage/article/list.htm?check=no">审核退回(${noCount})</a>
+					</li>
+	                      </ul>
+	                      <!--breadcrumbs end -->
+	                  </div>
+	              </div>
+              </#if>		
         	<!-- page start-->
             <section class="panel">
-                <header class="panel-heading">
-	                <div class="row">
-	                  <div class="col-lg-8">
-						<ul class="breadcrumb" style="margin-bottom:0px;">
-							<li>
-								<a href="${BASE_PATH}/manage/article/list.htm">根目录</a>
-							</li>
-							<#list pathList as pathFolder>
-							<li>
-								<a href="${BASE_PATH}/manage/article/list.htm?folderId=${pathFolder.folderId}">${pathFolder.name}</a>
-							</li>
-							</#list>
-						</ul>
-					   </div>
-					   <div class="col-lg-4">
-							<a class="btn btn-primary" style="float:right;" href="${BASE_PATH}/manage/article/add.htm?folderId=${folderId}">增加文章</a>
-					   </div>
-				</header>
+	                <header class="panel-heading">
+		                <div class="row">
+		                  		<div class="col-lg-4">
+							<ul class="breadcrumb" style="margin-bottom:0px;">
+								<li>
+									<a href="${BASE_PATH}/manage/article/list.htm">根目录</a>
+								</li>
+								<#list pathList as pathFolder>
+								<li>
+									<a href="${BASE_PATH}/manage/article/list.htm?folderId=${pathFolder.folderId}">${pathFolder.name}</a>
+								</li>
+								</#list>
+							</ul>
+						   </div>
+						   <div class="col-lg-8">
+								<a class="btn btn-primary" style="float:right;" href="${BASE_PATH}/manage/article/add.htm?folderId=${folderId}">增加文章</a>
+						   </div>
+				</div>
+			</header>
                 <div class="panel-body">
                 	<div class="adv-table">
                     	<div role="grid" class="dataTables_wrapper" id="hidden-table-info_wrapper">
@@ -85,11 +105,17 @@
                                     		</#if>
                							</td>
                							<td>
-                                			<select class="js_article_check" articleId="${e.articleId}">
-                                				<option value="init" <#if e.check=="init">selected</#if>>未审核</option>
-												<option value="yes" <#if e.check=="yes">selected</#if>>已审核</option>
-												<option value="no" <#if e.check=="no">selected</#if>>审核失败</option>
-											</select>
+               								<#if SESSION_ADMIN.isAdmin>
+                							<select class="js_article_check" articleId="${e.articleId}">
+                								<option value="init" <#if e.check=="init">selected</#if>>未审核</option>
+										<option value="yes" <#if e.check=="yes">selected</#if>>已审核</option>
+										<option value="no" <#if e.check=="no">selected</#if>>审核退回</option>
+									</select>
+									<#else>
+										<#if e.check=="init">未审核</#if>
+										<#if e.check=="yes">已审核</#if>
+										<#if e.check=="no"><span style="color:red;">审核退回</span></#if>
+									</#if>
                							</td>
                             			<td>
                             				<a href="${BASE_PATH}/manage/article/list.htm?folderId=${e.folder.folderId}&status=${e.status}">
@@ -103,8 +129,12 @@
                   								编辑
                   							</a>
                   							 | 
-                  							<a href="javascript:void(0);" class="js_article_delete" articleId="${e.articleId}" title="是否删除文章【${e.title}】">
+                  							<a href="javascript:void(0);" class="js_article_delete" articleId="${e.articleId}" title="是否删除文章">
                   								删除
+                  							</a>
+                  							| 
+                  							<a href="${BASE_PATH}/manage/article/preview.htm?articleId=${e.articleId}" target="_blank">
+                  								预览
                   							</a>
                 						</td>
                                 	</tr>

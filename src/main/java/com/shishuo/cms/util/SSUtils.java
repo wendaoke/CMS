@@ -1,6 +1,12 @@
 package com.shishuo.cms.util;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.jsoup.Jsoup;
+import org.jsoup.safety.Whitelist;
+import org.springframework.web.util.HtmlUtils;
+
+import freemarker.template.utility.HtmlEscape;
 
 /**
  * @author Herbert
@@ -28,9 +34,16 @@ public class SSUtils {
 		return StringUtils.lowerCase(sb.toString());
 	}
 
+	public static String toText(String str) {
+		return HtmlUtils.htmlEscape(str);
+	}
+	
+	public static String toHTML(String str) {
+		return Jsoup.clean(str, Whitelist.relaxed());
+	}
+
 	public static void main(String[] args) {
-		System.out.println(SSUtils.toUnderline("SSUtils"));
-		System.out.println(SSUtils.toUnderline("FolderPathTag"));
-		System.out.println(SSUtils.toUnderline("DDDDddAddadsfDDDDDDasdfD"));
+		String text = "美丽<script>;alert(123);</script>";
+		System.out.println(SSUtils.toText(text));
 	}
 }

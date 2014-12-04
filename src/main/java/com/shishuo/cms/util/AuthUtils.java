@@ -23,9 +23,9 @@ public class AuthUtils {
 	 * 生产密文密码
 	 * 
 	 * @param password
-	 *                明文密码
+	 *            明文密码
 	 * @param email
-	 *                邮箱
+	 *            邮箱
 	 * @return
 	 * @throws AuthException
 	 */
@@ -46,7 +46,6 @@ public class AuthUtils {
 	 * @return
 	 */
 	public static String getFaceUrl(String email) {
-		return SystemConstant.FACE_URL + "/" + AuthUtils.MD5(email)
-				+ ".jpg";
+		return SystemConstant.FACE_URL + "/" + AuthUtils.MD5(email) + ".jpg";
 	}
 }

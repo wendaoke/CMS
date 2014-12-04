@@ -20,6 +20,7 @@ import com.shishuo.cms.entity.Headline;
 import com.shishuo.cms.entity.vo.HeadlineVo;
 import com.shishuo.cms.entity.vo.JsonVo;
 import com.shishuo.cms.exception.UploadException;
+import com.shishuo.cms.util.SSUtils;
 
 @RequestMapping("/manage/headline")
 @Controller
@@ -57,7 +58,8 @@ public class ManageHeadlineAction extends ManageBaseAction {
 			@RequestParam(value = "url") String url, HttpServletRequest request) {
 		JsonVo<String> json = new JsonVo<String>();
 		try {
-			headlineService.addHeadline(file, name, url);
+			headlineService.addHeadline(file, SSUtils.toText(name),
+					SSUtils.toText(url));
 		} catch (IllegalStateException e) {
 			e.printStackTrace();
 		} catch (UploadException e) {
@@ -81,7 +83,8 @@ public class ManageHeadlineAction extends ManageBaseAction {
 			HttpServletRequest request) {
 		JsonVo<String> json = new JsonVo<String>();
 		try {
-			headlineService.updateHeadlineById(headlineId, name, file, url);
+			headlineService.updateHeadlineById(headlineId,
+					SSUtils.toText(name), file, SSUtils.toText(url));
 		} catch (UploadException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

@@ -3,6 +3,8 @@ package com.baidu.ueditor.hunter;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
@@ -43,6 +45,8 @@ public class FileManager {
 		}
 
 		Collection<File> list = FileUtils.listFiles(dir, this.allowFiles, true);
+		
+		Collections.reverse((List<File>) list);
 
 		if (index < 0 || index > list.size()) {
 			state = new MultiState(true);
@@ -82,6 +86,7 @@ public class FileManager {
 
 	private String getPath(File file) {
 
+		
 		String path = file.getAbsolutePath();
 
 		return path.replace(this.rootPath, "/");

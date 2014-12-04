@@ -16,6 +16,7 @@ import com.shishuo.cms.entity.vo.GuestbookVo;
 import com.shishuo.cms.entity.vo.JsonVo;
 import com.shishuo.cms.entity.vo.PageVo;
 import com.shishuo.cms.service.GuestbookService;
+import com.shishuo.cms.util.SSUtils;
 
 @RequestMapping("/manage/guestbook")
 @Controller
@@ -66,7 +67,8 @@ public class ManageGuestbookAction extends ManageBaseAction {
 		try {
 			// 检测校验结果
 			json.check();
-			guestbookService.updateReplyByMessageId(reply, guestbookId, status);
+			guestbookService.updateReplyByMessageId(SSUtils.toText(reply),
+					guestbookId, status);
 			json.setResult(true);
 		} catch (Exception e) {
 			json.setResult(false);

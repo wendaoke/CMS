@@ -11,9 +11,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.shishuo.cms.entity.vo.JsonVo;
 import com.shishuo.cms.service.GuestbookService;
+import com.shishuo.cms.util.SSUtils;
 
 @Controller
-@RequestMapping("/message")
+@RequestMapping("/guestbook")
 public class GuestbookAction extends BaseAction {
 
 	@Autowired
@@ -35,14 +36,13 @@ public class GuestbookAction extends BaseAction {
 		if (StringUtils.isBlank(title)) {
 			json.getErrors().put("title", "标题不能为空");
 		}
-		if (StringUtils.isBlank(content)) {
-			json.getErrors().put("content", "内容不能为空");
-		}
 
 		try {
 			// 检测校验结果
 			json.check();
-			messageBoardService.addGuestbook(name, email, title, content);
+			messageBoardService.addGuestbook(SSUtils.toText(name),
+					SSUtils.toText(email), SSUtils.toText(title),
+					SSUtils.toText(content));
 			json.setResult(true);
 		} catch (Exception e) {
 			logger.error(e.getMessage(), e);

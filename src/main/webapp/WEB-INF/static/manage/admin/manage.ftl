@@ -76,7 +76,7 @@
                                       <td>${e.name}</td>
                                       <td>
                                 <!-- Icons -->
-                               <a href="javascript:void(0);" adminId="${e.adminId}" title="删除${e.name}" class="js_delete_admin">
+                               <a href="javascript:void(0);" adminId="${e.adminId}" title="删除" class="js_delete_admin">
                                                                                                       删除
                                 </a>|
                                 <a href="${BASE_PATH}/manage/adminFolder/manage.htm?adminId=${e.adminId}" title="权限">

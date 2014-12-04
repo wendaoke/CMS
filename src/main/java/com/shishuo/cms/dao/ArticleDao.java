@@ -11,6 +11,7 @@ import java.util.List;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import com.shishuo.cms.constant.ArticleConstant;
 import com.shishuo.cms.constant.ArticleConstant.check;
 import com.shishuo.cms.entity.Article;
 import com.shishuo.cms.entity.vo.ArticleVo;
@@ -101,8 +102,8 @@ public interface ArticleDao {
 	 * @return List<FileVo>
 	 */
 	public List<ArticleVo> getArticleListOfDisplayByPath(
-			@Param("path") String path,
-			@Param("offset") long offset, @Param("rows") long rows);
+			@Param("path") String path, @Param("offset") long offset,
+			@Param("rows") long rows);
 
 	/**
 	 * 得到目录的所有文件的数量
@@ -119,8 +120,8 @@ public interface ArticleDao {
 	 * @return List<FileVo>
 	 */
 	public List<ArticleVo> getArticleListByAdminIdAndPath(
-			@Param("adminId") long adminId,
-			@Param("path") String path,
+			@Param("adminId") long adminId, @Param("path") String path,
+			@Param("check") ArticleConstant.check check,
 			@Param("offset") long offset, @Param("rows") long rows);
 
 	/**
@@ -131,7 +132,8 @@ public interface ArticleDao {
 	 * @return
 	 */
 	public int getArticleCountByAdminIdAndPath(@Param("adminId") long adminId,
-			@Param("path") String path);
+			@Param("path") String path,
+			@Param("check") ArticleConstant.check check);
 
 	/**
 	 * @param adminId

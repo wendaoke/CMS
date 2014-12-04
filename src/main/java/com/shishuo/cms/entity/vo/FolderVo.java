@@ -31,31 +31,6 @@ public class FolderVo extends Folder {
 		this.folderList = folderList;
 	}
 
-	public long getFirstFolderId() {
-		return Long.parseLong(this.getFolderId(1));
-	}
-
-	public long getSecondFolderId() {
-		return Long.parseLong(this.getFolderId(2));
-	}
-
-	public long getThirdFolderId() {
-		return Long.parseLong(this.getFolderId(3));
-	}
-
-	public long getFourthFolderId() {
-		return Long.parseLong(this.getFolderId(4));
-	}
-
-	private String getFolderId(int level) {
-		String[] ids = this.getPath().split("#");
-		if (ids.length < level) {
-			return "0";
-		} else {
-			return ids[level - 1];
-		}
-	}
-
 	public String getOwner() {
 		return owner;
 	}

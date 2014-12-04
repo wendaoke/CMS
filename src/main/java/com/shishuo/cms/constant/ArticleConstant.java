@@ -48,4 +48,19 @@ public class ArticleConstant {
 		 */
 		init,
 	};
+	/**
+	 * 是否需要登录
+	 * 
+	 * @author Herbert
+	 * 
+	 */
+	public static enum Login {
+		/**
+		 * 已审核
+		 */
+		yes, /**
+		 * /** 审核失败
+		 */
+		no
+	};
 }

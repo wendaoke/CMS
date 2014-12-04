@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 
 import com.shishuo.cms.constant.SystemConstant;
-import com.shishuo.cms.entity.Admin;
+import com.shishuo.cms.entity.vo.AdminVo;
 import com.shishuo.cms.entity.vo.JsonVo;
 import com.shishuo.cms.exception.ValidateException;
 import com.shishuo.cms.service.AdminFolderService;
@@ -76,8 +76,8 @@ public class ManageBaseAction {
 	 * @param request
 	 * @return
 	 */
-	protected Admin getAdmin(HttpServletRequest request) {
-		Admin admin = (Admin) request.getSession().getAttribute(
+	protected AdminVo getAdmin(HttpServletRequest request) {
+		AdminVo admin = (AdminVo) request.getSession().getAttribute(
 				SystemConstant.SESSION_ADMIN);
 		return admin;
 	}

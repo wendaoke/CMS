@@ -4,14 +4,16 @@ import com.shishuo.cms.entity.Admin;
 
 public class AdminVo extends Admin {
 
-	private String isAdmin;
+	private boolean isAdmin;
 
-	public String getIsAdmin() {
+	public boolean getIsAdmin() {
 		return isAdmin;
 	}
 
-	public void setIsAdmin(String isAdmin) {
+	public void setAdmin(boolean isAdmin) {
 		this.isAdmin = isAdmin;
 	}
+	
+	
 
 }

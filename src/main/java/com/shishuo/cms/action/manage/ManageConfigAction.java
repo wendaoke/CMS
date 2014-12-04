@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.shishuo.cms.constant.SystemConstant;
 import com.shishuo.cms.entity.vo.JsonVo;
+import com.shishuo.cms.util.SSUtils;
 
 /**
  * 网站配置action
@@ -66,9 +67,10 @@ public class ManageConfigAction extends ManageBaseAction {
 
 			// 检测校验结果
 			validate(json);
-
-			configService.updagteConfigByKey("sys_sitename", sitename);
-			configService.updagteConfigByKey("sys_sitedesc", sitedesc);
+			configService.updagteConfigByKey("sys_sitename",
+					SSUtils.toText(sitename));
+			configService.updagteConfigByKey("sys_sitedesc",
+					SSUtils.toText(sitedesc));
 			json.setResult(true);
 		} catch (Exception e) {
 			json.setResult(false);

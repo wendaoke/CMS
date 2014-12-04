@@ -7,9 +7,7 @@
 package com.shishuo.cms.util;
 
 import java.awt.image.BufferedImage;
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -21,6 +19,7 @@ import javax.imageio.ImageIO;
 import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.geometry.Positions;
 
+import org.apache.log4j.Logger;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.shishuo.cms.constant.SystemConstant;
@@ -30,6 +29,8 @@ import com.shishuo.cms.constant.SystemConstant;
  * 
  */
 public class MediaUtils {
+	
+	private static Logger logger = Logger.getLogger(MediaUtils.class);
 
 	/**
 	 * 文件允许格式
@@ -122,6 +123,7 @@ public class MediaUtils {
 	 */
 	public static String saveImage(MultipartFile multipartFile, int width,
 			int height) throws IOException {
+		logger.info("压缩图片尺寸："+width+" x "+height);
 		SimpleDateFormat formater = new SimpleDateFormat("yyyy/MM/dd");
 		String path = "upload/" + formater.format(new Date()) + "/"
 				+ UUID.randomUUID().toString().replaceAll("-", "") + ".jpg";
@@ -130,7 +132,6 @@ public class MediaUtils {
 		if (!file.getParentFile().exists()) {
 			file.getParentFile().mkdirs();
 		}
-		// ByteArrayOutputStream baos = new ByteArrayOutputStream();
 		if (width > 0 && height > 0) {
 			BufferedImage bufferedImage = ImageIO.read(multipartFile
 					.getInputStream());

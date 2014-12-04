@@ -13,6 +13,7 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,12 +22,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.shishuo.cms.action.ArticleAction;
 import com.shishuo.cms.constant.ArticleConstant;
-import com.shishuo.cms.constant.FolderConstant;
 import com.shishuo.cms.constant.MediaConstant;
 import com.shishuo.cms.entity.Admin;
 import com.shishuo.cms.entity.Article;
 import com.shishuo.cms.entity.Media;
+import com.shishuo.cms.entity.vo.AdminVo;
 import com.shishuo.cms.entity.vo.ArticleVo;
 import com.shishuo.cms.entity.vo.FolderVo;
 import com.shishuo.cms.entity.vo.JsonVo;
@@ -34,6 +36,7 @@ import com.shishuo.cms.entity.vo.PageVo;
 import com.shishuo.cms.exception.ArticleNotFoundException;
 import com.shishuo.cms.exception.FolderNotFoundException;
 import com.shishuo.cms.exception.UploadException;
+import com.shishuo.cms.util.SSUtils;
 
 /**
  * @author 文件action
@@ -42,6 +45,9 @@ import com.shishuo.cms.exception.UploadException;
 @Controller
 @RequestMapping("/manage/article")
 public class ManageArticleAction extends ManageBaseAction {
+
+	@Autowired
+	private ArticleAction articleAction;
 
 	@RequestMapping(value = "/add.htm", method = RequestMethod.GET)
 	public String add(HttpServletRequest request, HttpServletResponse response,
@@ -55,6 +61,39 @@ public class ManageArticleAction extends ManageBaseAction {
 		return "manage/article/add";
 	}
 
+	@ResponseBody
+	@RequestMapping(value = "/add.json", method = RequestMethod.POST)
+	public JsonVo<Article> add(
+			@RequestParam("folderId") long folderId,
+			@RequestParam("title") String title,
+			@RequestParam(value = "summary", required = false) String summary,
+			@RequestParam("content") String content,
+			@RequestParam(value = "createTime", required = false) String createTime,
+			@RequestParam("status") ArticleConstant.Status status,
+			@RequestParam("login") ArticleConstant.Login login,
+			@RequestParam(value = "file", required = false) MultipartFile file,
+			HttpServletRequest request, ModelMap modelMap)
+			throws UploadException, ParseException {
+		JsonVo<Article> json = new JsonVo<Article>();
+		try {
+			Article article = articleService.addArticle(folderId, this
+					.getAdmin(request).getAdminId(), SSUtils.toText(title
+					.trim()), SSUtils.toText(summary), status,login, content, file,
+					createTime);
+			json.setT(article);
+			json.setResult(true);
+			return json;
+		} catch (FolderNotFoundException e) {
+			e.printStackTrace();
+			json.setResult(false);
+			return json;
+		} catch (IOException e) {
+			e.printStackTrace();
+			json.setResult(false);
+			return json;
+		}
+	}
+
 	/**
 	 * @author 进入某种文章的列表分页的首页
 	 * @throws FolderNotFoundException
@@ -64,17 +103,29 @@ public class ManageArticleAction extends ManageBaseAction {
 	public String list(
 			@RequestParam(value = "p", defaultValue = "1") int pageNum,
 			@RequestParam(value = "folderId", defaultValue = "0") long folderId,
+			@RequestParam(value = "check", required = false) ArticleConstant.check check,
 			HttpServletRequest request, ModelMap modelMap)
 			throws FolderNotFoundException {
 		Admin admin = this.getAdmin(request);
 		List<FolderVo> pathList = folderService
 				.getFolderPathListByFolderId(folderId);
 		PageVo<ArticleVo> pageVo = articleService.getArticlePageByFolderId(
-				admin.getAdminId(), folderId, pageNum);
+				admin.getAdminId(), folderId, check, pageNum);
+		int initCount = articleService.getArticleCountByAdminIdAndFolderId(
+				admin.getAdminId(), 0, ArticleConstant.check.init);
+		int noCount = articleService.getArticleCountByAdminIdAndFolderId(
+				admin.getAdminId(), 0, ArticleConstant.check.no);
+		int allCount = initCount
+				+ noCount
+				+ articleService.getArticleCountByAdminIdAndFolderId(
+						admin.getAdminId(), 0, ArticleConstant.check.yes);
 		modelMap.put("pathList", pathList);
 		modelMap.put("folderId", folderId);
 		modelMap.put("pageVo", pageVo);
 		modelMap.put("p", pageNum);
+		modelMap.put("initCount", initCount);
+		modelMap.put("noCount", noCount);
+		modelMap.put("allCount", allCount);
 		return "manage/article/list";
 	}
 
@@ -121,59 +172,28 @@ public class ManageArticleAction extends ManageBaseAction {
 			@RequestParam(value = "createTime", required = false) String createTime,
 			@RequestParam("content") String content,
 			@RequestParam("status") ArticleConstant.Status status,
+			@RequestParam("login") ArticleConstant.Login login,
 			@RequestParam(value = "file", required = false) MultipartFile file,
 			HttpServletRequest request, ModelMap modelMap)
 			throws ParseException {
 		JsonVo<Article> json = new JsonVo<Article>();
-		Article article;
 		try {
-			title.trim();
-			article = articleService.updateFileByFileId(articleId, folderId,
-					this.getAdmin(request).getAdminId(), title, summary,
-					content, status, file, createTime);
+			Article article = articleService.updateArticle(articleId,
+					folderId, this.getAdmin(request).getAdminId(),
+					SSUtils.toText(title.trim()), SSUtils.toText(summary),
+					content, status,login, file, createTime);
 			json.setT(article);
 			json.setResult(true);
 			return json;
 		} catch (UploadException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			json.setResult(false);
 			return json;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			json.setResult(false);
-			return json;
-		}
-	}
-
-	@ResponseBody
-	@RequestMapping(value = "/add.json", method = RequestMethod.POST)
-	public JsonVo<Article> addJson(
-			@RequestParam("folderId") long folderId,
-			@RequestParam("title") String title,
-			@RequestParam(value = "summary", required = false) String summary,
-			@RequestParam("content") String content,
-			@RequestParam(value = "createTime", required = false) String createTime,
-			@RequestParam("status") ArticleConstant.Status status,
-			@RequestParam(value = "file", required = false) MultipartFile file,
-			HttpServletRequest request, ModelMap modelMap)
-			throws UploadException, ParseException {
-		JsonVo<Article> json = new JsonVo<Article>();
-		Article article;
-		try {
-			title.trim();
-			article = articleService.addArticle(folderId, this
-					.getAdmin(request).getAdminId(), title, summary, status,
-					content, file, createTime);
-			json.setT(article);
-			json.setResult(true);
 			return json;
 		} catch (FolderNotFoundException e) {
-			e.printStackTrace();
-			json.setResult(false);
-			return json;
-		} catch (IOException e) {
 			e.printStackTrace();
 			json.setResult(false);
 			return json;
@@ -215,32 +235,28 @@ public class ManageArticleAction extends ManageBaseAction {
 			@RequestParam(value = "check") ArticleConstant.check check,
 			HttpServletRequest request) throws ArticleNotFoundException {
 		JsonVo<String> json = new JsonVo<String>();
-		Admin admin = this.getAdmin(request);
-		if (admin.getAdminId() != 1) {
+		AdminVo admin = this.getAdmin(request);
+		if (!admin.getIsAdmin()) {
 			json.setResult(false);
 			json.setMsg("您不是超级管理员，无权该审核文件！");
 		} else {
-			try {
-				ArticleVo article = articleService.getArticleById(articleId);
-				FolderVo folder = folderService.getFolderById(article
-						.getFolderId());
-				if (folder.getCheck().equals(FolderConstant.check.yes)) {
-					if (check.equals(ArticleConstant.check.init)) {
-						json.setResult(false);
-						json.setMsg("该文件已审核，无法恢复至未审核状态！");
-					} else {
-						articleService.updateCheck(articleId, check);
-						json.setResult(true);
-					}
-				} else {
-					json.setResult(false);
-					json.setMsg("该文件无需审核！");
-				}
-			} catch (FolderNotFoundException e) {
-				json.setResult(false);
-				json.setMsg("找不到该文件所属目录！");
-			}
+			articleService.updateCheck(articleId, check);
+			json.setResult(true);
 		}
 		return json;
+	}
+
+	// @RequestMapping(value = "/preview.htm", method = RequestMethod.GET)
+	// public String preview(@RequestParam(value = "articleId") long articleId,
+	// @RequestParam(value = "p", defaultValue = "0") int p,
+	// ModelMap modelMap, HttpServletRequest request) {
+	// return articleAction.folder(articleId, p, modelMap);
+	// }
+
+	@RequestMapping(value = "/preview.htm", method = RequestMethod.GET)
+	public String preview(@RequestParam(value = "articleId") long articleId,
+			@RequestParam(value = "p", defaultValue = "0") int p,
+			ModelMap modelMap, HttpServletRequest request) {
+		return articleAction.article(articleId, p, modelMap);
 	}
 }

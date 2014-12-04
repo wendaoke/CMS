@@ -30,13 +30,16 @@ import com.shishuo.cms.exception.FolderNotFoundException;
 public class ManageAction extends ManageBaseAction {
 
 	@RequestMapping(value = "/index.htm", method = RequestMethod.GET)
-	public String index(HttpServletRequest request,ModelMap modelMap) throws FolderNotFoundException {
+	public String index(HttpServletRequest request, ModelMap modelMap)
+			throws FolderNotFoundException {
 		Admin admin = this.getAdmin(request);
 		modelMap.put("articleCount", 0);
 		modelMap.put("downloadCount", 0);
 		modelMap.put("userCount", 0);
 		modelMap.put("folderAll", folderService.getAllFolderList(0));
-		List<ArticleVo> articleList = articleService.getArticleListByAdminIdAndFolderId(admin.getAdminId(), 0, 0, 10);
+		List<ArticleVo> articleList = articleService
+				.getArticleListByAdminIdAndFolderId(admin.getAdminId(), 0,
+						null, 0, 10);
 		modelMap.put("articleList", articleList);
 		return "manage/index";
 	}

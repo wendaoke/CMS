@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,13 +28,18 @@ import com.shishuo.cms.util.PropertyUtils;
 public class ManageUEditorAction extends ManageBaseAction {
 
 	@ResponseBody
-	@RequestMapping(value = "/ueditor.json")
+	@RequestMapping(value = "/ueditor.htm")
 	public String config(@RequestParam(value = "action") String action,
-			HttpServletRequest request) {
-		String root = PropertyUtils.getRoot();
-		if (!root.endsWith("/")) {
-			root += "/";
-		}
+			HttpServletResponse response, HttpServletRequest request) {
+//		response.setContentType("text/html;charset=UTF-8");
+		// String root = HttpUtils.getBasePath(request);
+		String root = PropertyUtils.getRoot()
+				+ java.io.File.separatorChar;
+		// root = root.replace("\\", "/");
+		// if (!root.endsWith("/")) {
+		// root += "/";
+		// }
+		logger.info("ueditor root:"+root);
 		return new ActionEnter(request, root).exec();
 	}
 
@@ -46,22 +52,27 @@ public class ManageUEditorAction extends ManageBaseAction {
 	public String photoManager(HttpServletRequest request) {
 		String photoUploadPath = HttpUtils.getRealPath()
 				+ SystemConstant.UPLOAD_FOLDER;
-		List<java.io.File> fileList = MediaUtils.getFiles(photoUploadPath,
-				new ArrayList<java.io.File>(), MediaUtils.PHOTO_TYPE);
+		List<java.io.File> fileList = MediaUtils.getFiles(
+				photoUploadPath, new ArrayList<java.io.File>(),
+				MediaUtils.PHOTO_TYPE);
 		String imgStr = "";
 		for (java.io.File file : fileList) {
-			imgStr += file.getPath().replace(HttpUtils.getRealPath(), "")
+			imgStr += file.getPath().replace(
+					HttpUtils.getRealPath(), "")
 					+ "ue_separate_ue";
 		}
 		if (imgStr != "") {
-			imgStr = imgStr.substring(0, imgStr.lastIndexOf("ue_separate_ue"))
-					.replace(java.io.File.separator, "/").trim();
+			imgStr = imgStr.substring(0,
+					imgStr.lastIndexOf("ue_separate_ue"))
+					.replace(java.io.File.separator, "/")
+					.trim();
 		}
 		return imgStr;
 	}
 
 	// @ResponseBody
-	// @RequestMapping(value = "/photo/upload.htm", method = RequestMethod.POST)
+	// @RequestMapping(value = "/photo/upload.htm", method =
+	// RequestMethod.POST)
 	// public String photoUpload(@RequestParam("dir") String dir,
 	// @RequestParam("fileName") String fileName,
 	// @RequestParam("pictitle") String pictitle,
@@ -92,7 +103,8 @@ public class ManageUEditorAction extends ManageBaseAction {
 	// }
 	//
 	// @ResponseBody
-	// @RequestMapping(value = "/file/upload.htm", method = RequestMethod.POST)
+	// @RequestMapping(value = "/file/upload.htm", method =
+	// RequestMethod.POST)
 	// public String fileUpload(@RequestParam("Filename") String fileName,
 	// @RequestParam("Upload") String Upload,
 	// @RequestParam("upfile") MultipartFile upFile,

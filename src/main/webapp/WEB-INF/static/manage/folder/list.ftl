@@ -56,9 +56,9 @@
                                       <div class="col-xs-9">
 				 	<select class="form-control input-lg m-bot15" style="font-size:15px;width: 200px;" name="fatherId">
 				 			<option value="0">根目录</option>
-			                   		<#list folderAll as folder>
-			                        	<#if folder.owner == "yes">
-				                        	<option value="${folder.folderId}">${folder.pathName}</option>
+			                   		<#list folderAll as f>
+			                        	<#if f.owner == "yes">
+				                        	<option value="${f.folderId}" <#if folder.folderId ==f.folderId>selected</#if>>${f.pathName}</option>
 			                        	</#if>
 			                        </#list>							
 	                           	 </select>                                        
@@ -150,7 +150,7 @@
 													修改
 												</a>
 												|
-												<a class="js_folder_delete" folderId="${folder.folderId}" href="javascript:void(0);" title="删除${folder.name}">
+												<a class="js_folder_delete" folderId="${folder.folderId}" href="javascript:void(0);" title="删除">
 													删除
 												</a>
 												 | 

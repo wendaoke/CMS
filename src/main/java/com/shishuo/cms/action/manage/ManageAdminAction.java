@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.shishuo.cms.entity.Admin;
 import com.shishuo.cms.entity.vo.JsonVo;
+import com.shishuo.cms.util.SSUtils;
 
 /**
  * 管理员action
@@ -80,8 +81,8 @@ public class ManageAdminAction extends ManageBaseAction {
 			}
 			// 检测校验结果
 			validate(json);
-			adminName.trim();
-			adminService.addAdmin(adminName, password);
+			adminService.addAdmin(SSUtils.toText(adminName.trim()),
+					password);
 			json.setResult(true);
 		} catch (Exception e) {
 			json.setResult(false);
@@ -138,8 +139,10 @@ public class ManageAdminAction extends ManageBaseAction {
 			}
 			// 检测校验结果
 			validate(json);
+			SSUtils.toText(password);
 			Admin admin = this.getAdmin(request);
-			adminService.updateAdminByAmdinId(admin.getAdminId(), password);
+			adminService.updateAdminByAmdinId(admin.getAdminId(),
+					SSUtils.toText(password));
 			json.setResult(true);
 		} catch (Exception e) {
 			json.setResult(false);
@@ -167,4 +170,5 @@ public class ManageAdminAction extends ManageBaseAction {
 		}
 		return json;
 	}
+
 }

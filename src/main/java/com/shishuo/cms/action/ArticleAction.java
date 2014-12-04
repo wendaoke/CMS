@@ -25,7 +25,7 @@ import com.shishuo.cms.entity.vo.ArticleVo;
 public class ArticleAction extends BaseAction {
 
 	@RequestMapping(value = "/{articleId}.htm", method = RequestMethod.GET)
-	public String folder(@PathVariable long articleId,
+	public String article(@PathVariable long articleId,
 			@RequestParam(value = "p", defaultValue = "1") long p,
 			ModelMap modelMap) {
 		try {
@@ -34,7 +34,7 @@ public class ArticleAction extends BaseAction {
 			modelMap.addAttribute("p", p);
 			modelMap.addAttribute("folder", folder);
 			modelMap.addAttribute("article", article);
-			modelMap.addAttribute("g_folderId", folder.getFolderId());
+			modelMap.addAttribute("g_folderId", folderService.firstFolderId(folder.getFolderId()));
 			return themeService.getArticleTemplate(article.getFolderId(),
 					articleId);
 		} catch (Exception e) {

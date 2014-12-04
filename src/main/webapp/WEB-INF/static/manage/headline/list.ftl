@@ -47,7 +47,7 @@
                                     	<td>
                   							<!-- Icons -->
 		                                      <a class="fancybox" rel="group" href="${BASE_PATH}/manage/headline/update.htm?headlineId=${headline.headlineId}">修改</a> | 
-		                                      <a class="js_delete" href="javascript:void(0);" name="${headline.name}" headlineId="${headline.headlineId}">删除</a>
+		                                      <a class="js_delete" href="javascript:void(0);" headlineId="${headline.headlineId}">删除</a>
                 						</td>
                                 	</tr>
                                 	</#list>
@@ -100,7 +100,7 @@
 	    }); 
 		$('#attachment .js_delete').click(function(){
 			var file = $(this);
-			bootbox.confirm("是否要删除【"+$(this).attr("name")+"】文件？", function(result) {
+			bootbox.confirm("是否要删除文件？", function(result) {
 				if (result) {
 					$.post("${BASE_PATH}/manage/headline/delete.json",{'headlineId':file.attr("headlineId")},function(data){
 						if(data.result){
