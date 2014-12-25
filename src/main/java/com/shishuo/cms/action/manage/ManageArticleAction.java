@@ -70,7 +70,6 @@ public class ManageArticleAction extends ManageBaseAction {
 			@RequestParam("content") String content,
 			@RequestParam(value = "createTime", required = false) String createTime,
 			@RequestParam("status") ArticleConstant.Status status,
-			@RequestParam("login") ArticleConstant.Login login,
 			@RequestParam(value = "file", required = false) MultipartFile file,
 			HttpServletRequest request, ModelMap modelMap)
 			throws UploadException, ParseException {
@@ -78,7 +77,7 @@ public class ManageArticleAction extends ManageBaseAction {
 		try {
 			Article article = articleService.addArticle(folderId, this
 					.getAdmin(request).getAdminId(), SSUtils.toText(title
-					.trim()), SSUtils.toText(summary), status,login, content, file,
+					.trim()), SSUtils.toText(summary), status, content, file,
 					createTime);
 			json.setT(article);
 			json.setResult(true);
@@ -172,7 +171,6 @@ public class ManageArticleAction extends ManageBaseAction {
 			@RequestParam(value = "createTime", required = false) String createTime,
 			@RequestParam("content") String content,
 			@RequestParam("status") ArticleConstant.Status status,
-			@RequestParam("login") ArticleConstant.Login login,
 			@RequestParam(value = "file", required = false) MultipartFile file,
 			HttpServletRequest request, ModelMap modelMap)
 			throws ParseException {
@@ -181,7 +179,7 @@ public class ManageArticleAction extends ManageBaseAction {
 			Article article = articleService.updateArticle(articleId,
 					folderId, this.getAdmin(request).getAdminId(),
 					SSUtils.toText(title.trim()), SSUtils.toText(summary),
-					content, status,login, file, createTime);
+					content, status, file, createTime);
 			json.setT(article);
 			json.setResult(true);
 			return json;

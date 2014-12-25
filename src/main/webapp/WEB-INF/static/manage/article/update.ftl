@@ -85,15 +85,7 @@
 								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 								<input name="status" value="hidden" type="radio" <#if article.status=="hidden">checked</#if>> 隐藏
                           </div>
-                        </div>
-                        <div class="form-group">
-                          <label class="col-sm-2 col-sm-2 control-label">是否需要登录</label>
-                          <div class="col-sm-10" style="margin-bottom:10px;">
-                          	<input name="login" value="no" type="radio" <#if article.login=="no">checked</#if>> 不需要登录
-								&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-								<input name="login" value="yes" type="radio"  <#if article.login=="yes">checked</#if>> 需要登录
-                          </div>
-                        </div>                        
+                        </div>                       
                         <div class="form-group">
                       	  <div class="col-lg-offset-2 col-lg-10">
                           <button class="btn btn-shadow btn-primary" type="submit">发布</button>
