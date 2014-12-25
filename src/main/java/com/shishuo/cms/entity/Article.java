@@ -78,11 +78,6 @@ public class Article {
 	 * 审核
 	 */
 	private ArticleConstant.check check;
-	
-	/**
-	 * 审核
-	 */
-	private ArticleConstant.Login login;
 
 	/**
 	 * 创建时间
@@ -204,13 +199,5 @@ public class Article {
 
 	public void setUpdateTime(Date updateTime) {
 		this.updateTime = updateTime;
-	}
-
-	public ArticleConstant.Login getLogin() {
-		return login;
-	}
-
-	public void setLogin(ArticleConstant.Login login) {
-		this.login = login;
 	}
 }

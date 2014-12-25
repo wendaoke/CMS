@@ -12,8 +12,8 @@
 	<!-- ############################## -->
 	<insert id="addArticle" parameterType="com.shishuo.cms.entity.Article">
 		insert into
-		article(folderId,path,adminId,title,summary,content,picture,status,login,`check`,createTime,updateTime)
-		values(#{folderId},#{path},#{adminId},#{title},#{summary},#{content},#{picture},#{status},#{login},#{check},#{createTime},#{updateTime})
+		article(folderId,path,adminId,title,summary,content,picture,status,`check`,createTime,updateTime)
+		values(#{folderId},#{path},#{adminId},#{title},#{summary},#{content},#{picture},#{status},#{check},#{createTime},#{updateTime})
 		<selectKey resultType="long" keyProperty="articleId">
 			SELECT
 			LAST_INSERT_ID()
@@ -47,7 +47,6 @@
 		picture=#{picture},
 		content=#{content},
 		status=#{status},
-		login=#{login},
 		`check`=#{check},
 		createTime=#{createTime},
 		updateTime=#{updateTime}

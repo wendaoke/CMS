@@ -75,8 +75,7 @@ public class ArticleService {
 	 */
 	@CacheEvict(value = "article", allEntries = true)
 	public Article addArticle(long folderId, long adminId, String title,
-			String summary, ArticleConstant.Status status,
-			ArticleConstant.Login login, String content,
+			String summary, ArticleConstant.Status status,String content,
 			MultipartFile file, String createTime)
 			throws FolderNotFoundException, UploadException,
 			IOException {
@@ -103,7 +102,6 @@ public class ArticleService {
 		article.setCommentCount(0);
 		article.setPicture(picture);
 		article.setStatus(status);
-		article.setLogin(login);
 		if (StringUtils.isBlank(createTime)) {
 			article.setCreateTime(now);
 		} else {
@@ -161,8 +159,7 @@ public class ArticleService {
 	@CacheEvict(value = "article", allEntries = true)
 	public Article updateArticle(long articleId, long folderId,
 			long adminId, String title, String summary,
-			String content, ArticleConstant.Status status,
-			ArticleConstant.Login login, MultipartFile file,
+			String content, ArticleConstant.Status status,MultipartFile file,
 			String time) throws UploadException, IOException, FolderNotFoundException {
 		Date now = new Date();
 		Article article = articleDao.getArticleById(articleId);
@@ -182,7 +179,6 @@ public class ArticleService {
 		article.setCommentCount(0);
 		article.setPicture(picture);
 		article.setStatus(status);
-		article.setLogin(login);
 		if (article.getCheck().equals(ArticleConstant.check.no)) {
 			article.setCheck(ArticleConstant.check.init);
 		}
