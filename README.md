@@ -18,7 +18,8 @@ QQ群：7343505 <a target="_blank" href="http://shang.qq.com/wpa/qunwpa?idkey=83
 4. 然后在URI输入：https://git.oschina.net/shishuo/CMS.git
 5. 等待eclipse自动下载jar包
 6. 创建/sql/install.sql数据库
-7. 部署中可能还会碰到很多问题，请加入QQ群：7343505
+7. 部署中可能还会碰到很多问题，请到论坛发帖，师说CMS论坛：<a href="师说CMS论坛：http://bbs.shishuo.com/thread-5.htm
+">http://bbs.shishuo.com/thread-5.htm</a>
 
 ## 部署到线上（生产）
 1. 复制 /src/main/resources/shishuocms.properties 到 /
@@ -59,8 +60,6 @@ QQ群：7343505 <a target="_blank" href="http://shang.qq.com/wpa/qunwpa?idkey=83
 如果您喜欢“师说CMS”，认为“师说CMS”确实给您带来方便和帮助，那么欢迎您捐赠。这笔钱会用在“师说CMS”的服务器费用上。非常感谢，您的捐赠，是我们前进的动力。我们将定期公开捐赠和支出。<br>
 <a href='http://me.alipay.com/herbert'> <img src='https://img.alipay.com/sys/personalprod/style/mc/btn-index.png' /> </a>
 
-## 演示地址
-[http://shishuocms.aliapp.com/](http://shishuocms.aliapp.com/)
 
 ## 技术关键词
 * jQuery
