@@ -1,7 +1,8 @@
 ## 欢迎使用 “师说CMS”
 
 > 使用Java语言开发的CMS（使用Apache2协议，可免费用于商业用途）<br>
-QQ群：7343505 <a target="_blank" href="http://shang.qq.com/wpa/qunwpa?idkey=8330a17a4fdc8ee8dc65b546c27218aac74ba2ea6c34cf5fb75fffe31dc81be8"><img border="0" src="http://pub.idqqimg.com/wpa/images/group.png" alt="师说CMS技术交流" title="师说CMS技术交流"></a>
+> 师说CMS论坛：<a href="师说CMS论坛：http://bbs.shishuo.com/thread-5.htm
+">http://bbs.shishuo.com/thread-5.htm</a>
 
 ## 部署环境前提
 * eclipse
