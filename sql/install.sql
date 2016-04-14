@@ -1,4 +1,4 @@
-CREATE DATABASE  IF NOT EXISTS `shishuocms` ;
+CREATE DATABASE  IF NOT EXISTS `shishuocms` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
 USE `shishuocms`;
 
 CREATE TABLE `admin` (

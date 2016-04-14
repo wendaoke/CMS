@@ -22,15 +22,17 @@
 	         http://www.springframework.org/schema/task 
 	         http://www.springframework.org/schema/task/spring-task.xsd">
 
-	<!-- 自动扫描的包名 -->
-	<context:component-scan base-package="com.shishuo.cms"></context:component-scan>
-
 	<mvc:annotation-driven />
 
 	<tx:annotation-driven />
 
 	<task:annotation-driven />
 
+   	<!-- 自动扫描的包名 -->
+	<context:component-scan base-package="com.very"></context:component-scan>
+	
+	<aop:aspectj-autoproxy/>	
+	   
 	<cache:annotation-driven key-generator="keyGeneratorService"/>
 
 	<mvc:resources mapping="/static/**" location="/WEB-INF/static/"
@@ -38,14 +40,6 @@
 	<mvc:resources mapping="/upload/**" location="/upload/"
 		cache-period="31556926" />
 		
-		
-	<mvc:interceptors>
-		<mvc:interceptor>
-			<mvc:mapping path="/**" />
-			<bean class="com.shishuo.cms.filter.GlobalInterceptor"></bean>
-		</mvc:interceptor>
-	</mvc:interceptors>
-
 	<!-- spring自己的换管理器，这里定义了两个缓存位置名称 ，既注解中的value -->
 	<bean id="cacheManager" class="org.springframework.cache.support.SimpleCacheManager">
 		<property name="caches">
@@ -69,14 +63,7 @@
 		</property>
 	</bean>
 
-	<!-- 在XML配置文件中加入外部属性文件，当然也可以指定外部文件的编码 -->
-	<bean id="propertyConfigurer" class="com.shishuo.cms.util.PropertyUtils">
-		<property name="locations">
-			<list>
-				<value>classpath:shishuocms.properties</value> <!-- 指定外部文件的编码 -->
-			</list>
-		</property>
-	</bean>
+
 
 
 	<!-- FreeMarker的配置 -->
@@ -159,28 +146,76 @@
 		</property>
 	</bean>
 
-	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
-		<property name="driverClassName" value="${jdbc.driverClass}" />
-		<property name="url" value="${jdbc.url}" />
-		<property name="username" value="${jdbc.username}" />
-		<property name="password" value="${jdbc.password}" />
+	<!-- 在XML配置文件中加入外部属性文件，当然也可以指定外部文件的编码 -->
+	<bean id="jdbcPropertyConfigurer"  class="com.shishuo.cms.util.PropertyUtils">
+		<property name="locations">
+			<list>
+				<value>classpath:jdbc.properties</value> <!-- 指定外部文件的编码 -->
+			</list>
+		</property>
 	</bean>
+	
+    <bean id="shishuocmsDataSource"  class="org.apache.commons.dbcp.BasicDataSource"  destroy-method="close">
+        <property name="driverClassName"  value="${jdbc.shishuocms.driver}"/>
+        <property name="url"  value="${jdbc.shishuocms.url}"/>
+        <property name="username"  value="${jdbc.shishuocms.username}"/>
+        <property name="password" value="${jdbc.shishuocms.password}"/>
+        <property name="initialSize"  value="${jdbc.initialSize}"/>
+        <property name="minIdle"  value="${jdbc.minIdle}"/>
+        <property name="maxIdle"  value="${jdbc.maxIdle}"/>
+        <property name="maxActive"  value="${jdbc.maxActive}"/>
+        <property name="maxWait"  value="${jdbc.maxWait}"/>
+        <property name="defaultAutoCommit"  value="${jdbc.defaultAutoCommit}"/>
+        <property name="removeAbandoned"  value="${jdbc.removeAbandoned}"/>
+        <property name="removeAbandonedTimeout"  value="${jdbc.removeAbandonedTimeout}"/>
+        <property name="testWhileIdle"  value="${jdbc.testWhileIdle}"/>
+        <property name="timeBetweenEvictionRunsMillis"  value="${jdbc.timeBetweenEvictionRunsMillis}"/>
+        <property name="numTestsPerEvictionRun"  value="${jdbc.numTestsPerEvictionRun}"/>
+        <property name="minEvictableIdleTimeMillis"  value="${jdbc.minEvictableIdleTimeMillis}"/>
+    </bean>
+    
+    <bean id="cardDataSource"  class="org.apache.commons.dbcp.BasicDataSource"  destroy-method="close">
+        <property name="driverClassName"  value="${jdbc.card.driver}"/>
+        <property name="url"  value="${jdbc.card.url}"/>
+        <property name="username"  value="${jdbc.card.username}"/>
+        <property name="password" value="${jdbc.card.password}"/>
+        <property name="initialSize"  value="${jdbc.initialSize}"/>
+        <property name="minIdle"  value="${jdbc.minIdle}"/>
+        <property name="maxIdle"  value="${jdbc.maxIdle}"/>
+        <property name="maxActive"  value="${jdbc.maxActive}"/>
+        <property name="maxWait"  value="${jdbc.maxWait}"/>
+        <property name="defaultAutoCommit"  value="${jdbc.defaultAutoCommit}"/>
+        <property name="removeAbandoned"  value="${jdbc.removeAbandoned}"/>
+        <property name="removeAbandonedTimeout"  value="${jdbc.removeAbandonedTimeout}"/>
+        <property name="testWhileIdle"  value="${jdbc.testWhileIdle}"/>
+        <property name="timeBetweenEvictionRunsMillis"  value="${jdbc.timeBetweenEvictionRunsMillis}"/>
+        <property name="numTestsPerEvictionRun"  value="${jdbc.numTestsPerEvictionRun}"/>
+        <property name="minEvictableIdleTimeMillis"  value="${jdbc.minEvictableIdleTimeMillis}"/>
+    </bean>
+    
 
-	<!-- 创建SqlSessionFactory，同时指定数据源 -->
+    <bean id="multipleDataSource"  class="com.very.util.db.MultipleDataSource">
+        <property name="defaultTargetDataSource"  ref="shishuocmsDataSource"/>
+        <property name="targetDataSources">
+            <map>
+                <entry key="shishuocmsDataSource"  value-ref="shishuocmsDataSource"/>
+                <entry key="cardDataSource"  value-ref="cardDataSource"/>
+            </map>
+        </property>
+    </bean>
+    
+    	<!-- 创建SqlSessionFactory，同时指定数据源 -->
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-		<property name="dataSource" ref="dataSource" />
+		<property name="dataSource" ref="multipleDataSource" />
 	</bean>
-
 	<!-- 配置事务管理器 -->
 	<bean id="transactionManager"
 		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
-		<property name="dataSource" ref="dataSource" />
+		<property name="dataSource" ref="multipleDataSource" />
 	</bean>
-
-	<!--创建数据映射器，数据映射器必须为接口 -->
-	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-		<property name="annotationClass" value="org.springframework.stereotype.Repository" />
-		<property name="basePackage" value="com.shishuo.cms.dao" />
-	</bean>
+    <!-- 注册拦截器 -->
+    <mvc:interceptors>
+        <bean class="com.shishuo.cms.filter.GlobalInterceptor" />
+    </mvc:interceptors>
 
 </beans>

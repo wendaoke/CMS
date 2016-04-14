@@ -39,11 +39,13 @@ public class PropertyUtils extends PropertyPlaceholderConfigurer {
 			String keyStr = key.toString();
 			String value = props.getProperty(keyStr);
 			propertyMap.put(keyStr, value);
+			logger.trace("key:"+keyStr+";value:"+value);
 		}
 	}
 
 	public static String getValue(String name) {
 		String value = propertyMap.get(name);
+		logger.trace("name:"+name+";value:"+value);
 		if (StringUtils.isBlank(value)) {
 			return "";
 		} else {

@@ -18,6 +18,7 @@ import com.shishuo.cms.service.TemplateService;
  * @author Herbert
  * 
  */
+
 public class BaseAction {
 
 	@Autowired
