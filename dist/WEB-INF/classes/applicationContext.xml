@@ -4,7 +4,7 @@
 	xmlns:lang="http://www.springframework.org/schema/lang" xmlns:tx="http://www.springframework.org/schema/tx"
 	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:cache="http://www.springframework.org/schema/cache" xmlns:mvc="http://www.springframework.org/schema/mvc"
-	xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:task="http://www.springframework.org/schema/task"  xmlns:util="http://www.springframework.org/schema/util"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans
 	         http://www.springframework.org/schema/beans/spring-beans.xsd
 	         http://www.springframework.org/schema/lang
@@ -19,6 +19,8 @@
 	         http://www.springframework.org/schema/context/spring-context.xsd
 	         http://www.springframework.org/schema/cache
 	         http://www.springframework.org/schema/cache/spring-cache.xsd
+	         http://www.springframework.org/schema/util
+	         http://www.springframework.org/schema/util/spring-util.xsd
 	         http://www.springframework.org/schema/task 
 	         http://www.springframework.org/schema/task/spring-task.xsd">
 
@@ -27,10 +29,12 @@
 	<tx:annotation-driven />
 
 	<task:annotation-driven />
-	
-   <aop:aspectj-autoproxy/>
+
    	<!-- 自动扫描的包名 -->
-	<context:component-scan base-package="com.very.util.db"></context:component-scan>
+	<context:component-scan base-package="com.very"></context:component-scan>
+	
+	<aop:aspectj-autoproxy/>	
+	   
 	<cache:annotation-driven key-generator="keyGeneratorService"/>
 
 	<mvc:resources mapping="/static/**" location="/WEB-INF/static/"
@@ -61,7 +65,21 @@
 		</property>
 	</bean>
 
-
+  <bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping" />  
+  <bean class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter" >  
+      <property name="messageConverters">  
+          <util:list id="beanList">  
+              <ref bean="mappingJacksonHttpMessageConverter"/>  
+          </util:list>  
+      </property>  
+  </bean>  
+  <bean id="mappingJacksonHttpMessageConverter" class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">  
+      <property name="supportedMediaTypes">  
+          <list>  
+              <value>text/html;charset=UTF-8</value>  
+          </list>  
+      </property>  
+  </bean>  
 
 
 	<!-- FreeMarker的配置 -->
@@ -192,12 +210,12 @@
     </bean>
     
 
-    <bean id="multipleDataSource" class="com.very.util.db.MultipleDataSource">
-        <property name="defaultTargetDataSource" ref="shishuocmsDataSource"/>
+    <bean id="multipleDataSource"  class="com.very.util.db.MultipleDataSource">
+        <property name="defaultTargetDataSource"  ref="shishuocmsDataSource"/>
         <property name="targetDataSources">
             <map>
-                <entry key="shishuocmsDataSource" value-ref="shishuocmsDataSource"/>
-                <entry key="cardDataSource" value-ref="cardDataSource"/>
+                <entry key="shishuocmsDataSource"  value-ref="shishuocmsDataSource"/>
+                <entry key="cardDataSource"  value-ref="cardDataSource"/>
             </map>
         </property>
     </bean>
@@ -211,7 +229,9 @@
 		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
 		<property name="dataSource" ref="multipleDataSource" />
 	</bean>
-
-
+    <!-- 注册拦截器 -->
+    <mvc:interceptors>
+        <bean class="com.shishuo.cms.filter.GlobalInterceptor" />
+    </mvc:interceptors>
 
 </beans>

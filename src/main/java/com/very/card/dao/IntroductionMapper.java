@@ -1,5 +1,8 @@
 package com.very.card.dao;
 
+import java.util.HashMap;
+import java.util.List;
+
 import org.springframework.stereotype.Repository;
 
 import com.very.card.model.Introduction;
@@ -60,4 +63,6 @@ public interface IntroductionMapper {
      * @mbggenerated
      */
     int updateByPrimaryKey(Introduction record);
+    
+    List<Introduction> queryBySelective(HashMap hashmap);
 }
