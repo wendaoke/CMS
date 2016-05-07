@@ -36,8 +36,12 @@
 		<script src="${BASE_PATH}/static/frame/ace/assets/js/ace-elements.min.js"></script>
 		<script src="${BASE_PATH}/static/frame/ace/assets/js/ace.min.js"></script>
 		
-	   <script src="${BASE_PATH}/static/frame/js/underscore-min.js"></script>
-	   <script src="${BASE_PATH}/static/frame/js/backbone-min.js"></script>
+		<!-- custom scripts -->
+	    <script src="${BASE_PATH}/static/frame/js/jquery.i18n.properties-min-1.0.9.js"></script>
+	    <script src="${BASE_PATH}/static/frame/js/json2.js"></script>	 
+	    <script src="${BASE_PATH}/static/frame/js/jquery.very.js"></script>		       
+	    <script src="${BASE_PATH}/static/frame/js/underscore-min.js"></script>
+	    <script src="${BASE_PATH}/static/frame/js/backbone-min.js"></script>
 		<script src="${BASE_PATH}/static/frame/js/custom.js"></script>
 
 		<!-- inline scripts related to this page -->

@@ -12,6 +12,9 @@
 		<link rel="stylesheet" href="${BASE_PATH}/static/frame/ace/assets/css/bootstrap.min.css" />
 		<link rel="stylesheet" href="${BASE_PATH}/static/frame/ace/assets/font-awesome/4.2.0/css/font-awesome.min.css" />
 
+		<!-- customer-->
+		<link rel="stylesheet" href="${BASE_PATH}/static/frame/css/very.css" />
+
 		<!-- page specific plugin styles -->
 
 		<!-- text fonts -->

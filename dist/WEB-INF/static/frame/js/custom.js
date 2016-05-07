@@ -1,53 +1,20 @@
-// 这是一个管理着 视图/控制/模型 的全局类
-var App = {
-Models: {},
-Views: {},
-Controllers: {},
-Collections: {},
-initialize: function() {
-new App.Controllers.Routes();
-        Backbone.history.start() // 要驱动所有的Backbone程序，Backbone.history.start()是必须的。
-    }
-};
-App.Models.Hello = Backbone.Model.extend({
+$(document).ready(function() {
+	var pageurl;
+	var jsurl;
+	$(".menutext").bind("click",function(){
+		console.log(jsurl);
+			if(!$.isEmptyObject(jsurl)){
+				$("script[src='"+jsurl+"']").remove(); 
+			}
+			pageurl = $($(this)).attr("pageurl");
+			jsurl = $($(this)).attr("jsurl");			
+			console.log(pageurl);
+			console.log(jsurl);
+			$(".page-content").load(pageurl,function() {
+				$.getScript(jsurl,function(){
+					initializePage();
+				});
 
-	 defaults : { //声明属性，并指定默认值
-            name : 'liuhh',  
-            message : 'hell world!'
-        }  
-});
-App.Views.Hello = Backbone.View.extend({
-el: $("#person_template"),
-initialize: function(options){
-this.options = options;
-this.bind('change', this.render);
-this.model = this.options.model;
-},
-render: function(){ // render方法，目标只有两个：填充this.el，返回this以便链式操作。
-var t = $(this.el).html();
-$("#container").html(_.template($(this.el).html())(this.model.toJSON()));
-return this
-}
-});
-App.Controllers.Routes = Backbone.Router.extend({
-routes: {
-"!/hello" : "hello",//使用#!/hello驱动路由
-},
-hello : function() {
-//新建一个模型，模型向后端请求更新内容成功后根据模型渲染新页面
-var helloModel = new App.Models.Hello;
-//helloModel.fetch({
-//success: function(model){
-//var helloView = new App.Views.Hello({model: model});
-//helloView.trigger('change');
-//}
-//})
-var helloView = new App.Views.Hello({model: helloModel});
-//helloView.trigger('change');
-$(".page-content").load("/static/pages/card/list.html",function() {
-	initializePage();
-});
-
-
-}});
-App.initialize();
+			});
+	}); 
+})

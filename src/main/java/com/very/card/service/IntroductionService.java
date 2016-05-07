@@ -13,12 +13,17 @@ import com.very.card.model.Introduction;
 public class IntroductionService {
 	@Autowired
 	private IntroductionMapper mapper;
-	
-	public Introduction selectByPrimaryKey(int id){
+
+	public Introduction selectByPrimaryKey(String id) {
 		return mapper.selectByPrimaryKey(id);
 	}
-	
-	public List<Introduction> queryBySelective(HashMap hashmap){
-		return mapper.queryBySelective(hashmap);
+
+	public List<Introduction> queryBySelective(HashMap hashmap) {
+		return null;
+	}
+
+	public int insert(Introduction record) {
+		return mapper.insert(record);
+
 	}
 }

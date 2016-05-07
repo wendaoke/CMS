@@ -25,9 +25,11 @@
 								</span>
 							</form>
 						</div><!-- /.nav-search -->
-					</div>
+					</div><!-- /.breadcrumbs -->
 
 					<div class="page-content">
 								
 					</div><!-- /.page-content -->
+			</div><!-- /.main-content-inner-->				
 		</div><!-- /.main-content -->
+		

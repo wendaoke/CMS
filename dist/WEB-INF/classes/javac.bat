@@ -1,0 +1,1 @@
+cmd.exe /X /C "D:\Java\jdk1.7.0_45\jre\..\bin\javac.exe @D:/workspace/CMS/target/classes/org.codehaus.plexus.compiler.javac.JavacCompiler3309417590042422505arguments -J-Xmx1024m -J-Xms512m"

@@ -30,18 +30,22 @@
 						<ul class="submenu">
 
 							<li class="">
-								<a href="#" onClick="showPage('static/frame/manage/card/list.html');return false;" >
-									<i class="menu-icon fa fa-caret-right"></i>
+								<a href="#" >
+									<i class="menu-icon fa fa-caret-right"  ></i>
+									<span  class="menutext" pageurl="/static/pages/card/list.html"  jsurl="/static/js/card/list.js">
 									公告列表
+									</span>
 								</a>
 
 								<b class="arrow"></b>
 							</li>
 
 							<li class="">
-								<a href="elements.html">
+								<a href="#"  >
 									<i class="menu-icon fa fa-caret-right"></i>
+									<span   class="menutext" pageurl="/static/pages/card/list2.html"  jsurl="/static/js/card/list2.js">
 									公告编写
+									</span>
 								</a>
 
 								<b class="arrow"></b>

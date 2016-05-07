@@ -12,7 +12,6 @@ $(document).ready(function() {
 			console.log(jsurl);
 			$(".page-content").load(pageurl,function() {
 				$.getScript(jsurl,function(){
-					alert("123");
 					initializePage();
 				});
 

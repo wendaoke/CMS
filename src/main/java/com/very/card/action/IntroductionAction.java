@@ -1,5 +1,6 @@
 package com.very.card.action;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -8,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -21,21 +23,31 @@ import com.very.card.service.IntroductionService;
 public class IntroductionAction {
 	@Autowired
 	public IntroductionService service;
-	
+
 	@RequestMapping(value = "/introduction.htm", method = RequestMethod.GET)
-	public String login(HttpServletRequest request, ModelMap modelMap,@RequestParam("id")int id) {
+	public String login(HttpServletRequest request, ModelMap modelMap, @RequestParam("id") String id) {
 		Introduction introduction = service.selectByPrimaryKey(id);
-		modelMap.addAttribute("user",introduction);
+		modelMap.addAttribute("user", introduction);
 		return "/card/introduction";
 	}
-	
-    @ResponseBody  
-    @RequestMapping(value="/list.htm",method = RequestMethod.GET)  
-    public List<Introduction> list(ModelMap modelMap,@RequestParam(value="title", required = false)String  title){  
-    	HashMap hashmap = new HashMap();
-    	hashmap.put("title", title);
-    	hashmap.put("creator", 1);
-    	List<Introduction> lst = service.queryBySelective(hashmap);
-      return lst ;  
-    }  
+
+	@ResponseBody
+	@RequestMapping(value = "/list.htm", method = RequestMethod.GET)
+	public List<Introduction> list(ModelMap modelMap, @RequestParam(value = "title", required = false) String title) {
+		HashMap hashmap = new HashMap();
+		hashmap.put("title", title);
+		hashmap.put("creator", 1);
+		List<Introduction> lst = service.queryBySelective(hashmap);
+		return lst;
+	}
+
+	@ResponseBody
+	@RequestMapping(value = "/add.htm", method = RequestMethod.POST)
+	public int add(@RequestBody Introduction record) {
+		record.setCreateTime(new Date());
+		record.setCreator(1);
+		int result = service.insert(record);
+		return result;
+	}
+
 }
